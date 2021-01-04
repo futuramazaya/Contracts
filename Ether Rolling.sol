@@ -1,14 +1,14 @@
-
-//  $$$$$$$$\ $$$$$$$$\ $$\   $$\ $$$$$$$$\ $$$$$$$\        $$$$$$$\   $$$$$$\  $$\       $$\       $$$$$$\ $$\   $$\  $$$$$$\  
-//  $$  _____|\__$$  __|$$ |  $$ |$$  _____|$$  __$$\       $$  __$$\ $$  __$$\ $$ |      $$ |      \_$$  _|$$$\  $$ |$$  __$$\ 
-//  $$ |         $$ |   $$ |  $$ |$$ |      $$ |  $$ |      $$ |  $$ |$$ /  $$ |$$ |      $$ |        $$ |  $$$$\ $$ |$$ /  \__|
-//  $$$$$\       $$ |   $$$$$$$$ |$$$$$\    $$$$$$$  |      $$$$$$$  |$$ |  $$ |$$ |      $$ |        $$ |  $$ $$\$$ |$$ |$$$$\ 
-//  $$  __|      $$ |   $$  __$$ |$$  __|   $$  __$$<       $$  __$$< $$ |  $$ |$$ |      $$ |        $$ |  $$ \$$$$ |$$ |\_$$ |
-//  $$ |         $$ |   $$ |  $$ |$$ |      $$ |  $$ |      $$ |  $$ |$$ |  $$ |$$ |      $$ |        $$ |  $$ |\$$$ |$$ |  $$ |
-//  $$$$$$$$\    $$ |   $$ |  $$ |$$$$$$$$\ $$ |  $$ |      $$ |  $$ | $$$$$$  |$$$$$$$$\ $$$$$$$$\ $$$$$$\ $$ | \$$ |\$$$$$$  |
-//  \________|   \__|   \__|  \__|\________|\__|  \__|      \__|  \__| \______/ \________|\________|\______|\__|  \__| \______/ 
+//
+// $$$$$$$$\ $$$$$$$$\ $$\   $$\ $$$$$$$$\ $$$$$$$\        $$$$$$$\   $$$$$$\  $$\       $$\       $$$$$$\ $$\   $$\  $$$$$$\  
+// $$  _____|\__$$  __|$$ |  $$ |$$  _____|$$  __$$\       $$  __$$\ $$  __$$\ $$ |      $$ |      \_$$  _|$$$\  $$ |$$  __$$\ 
+// $$ |         $$ |   $$ |  $$ |$$ |      $$ |  $$ |      $$ |  $$ |$$ /  $$ |$$ |      $$ |        $$ |  $$$$\ $$ |$$ /  \__|
+// $$$$$\       $$ |   $$$$$$$$ |$$$$$\    $$$$$$$  |      $$$$$$$  |$$ |  $$ |$$ |      $$ |        $$ |  $$ $$\$$ |$$ |$$$$\ 
+// $$  __|      $$ |   $$  __$$ |$$  __|   $$  __$$<       $$  __$$< $$ |  $$ |$$ |      $$ |        $$ |  $$ \$$$$ |$$ |\_$$ |
+// $$ |         $$ |   $$ |  $$ |$$ |      $$ |  $$ |      $$ |  $$ |$$ |  $$ |$$ |      $$ |        $$ |  $$ |\$$$ |$$ |  $$ |
+// $$$$$$$$\    $$ |   $$ |  $$ |$$$$$$$$\ $$ |  $$ |      $$ |  $$ | $$$$$$  |$$$$$$$$\ $$$$$$$$\ $$$$$$\ $$ | \$$ |\$$$$$$  |
+// \________|   \__|   \__|  \__|\________|\__|  \__|      \__|  \__| \______/ \________|\________|\______|\__|  \__| \______/ 
                                                                                                                             
-
+                                                                                                                            
 pragma solidity 0.6.8;
 // SPDX-License-Identifier: NONE
 
@@ -148,6 +148,7 @@ contract EtherRolling is Ownable {
     uint256[] public cycles;
     uint8 public DAILY = 6; //Daily percentage income
     uint8 LOWER_LIMIT = 0;
+    uint256 public minDeposit = 0.5 ether;
     uint8[] public ref_bonuses = [10,10,10,10,10,8,8,8,8,8,5,5,5,5,5];  //referral bonuses        
     uint8[] public matrixBonuses = [7,7,7,7,7,10,10,10,10,10,3,3,3,3,3]; //Matrix bonuses
     uint256[] public pool_bonuses;                    // 1 => 1%
@@ -258,10 +259,10 @@ contract EtherRolling is Ownable {
         }
         else {
             if(method == 0){
-            require(_amount >= 0.5 ether && _amount <= cycles[0], "Bad amount");
+            require(_amount >= minDeposit && _amount <= cycles[0], "Bad amount");
             }
             else if(method == 1){
-                require(_amount >= (5 * 10 ** 17) && _amount <= cycles[0], "Bad amount");
+                require(_amount >= minDeposit && _amount <= cycles[0], "Bad amount");
             }else{
                 revert();
             }
@@ -493,10 +494,12 @@ contract EtherRolling is Ownable {
         require(perc >= LOWER_LIMIT,"Invalid daily percentage");
         DAILY = perc;
     }
+    function setMinDeposit(uint256 amount) external onlyOwner{
+        minDeposit = amount;
+    }
     function maxPayoutOf(uint256 _amount) pure external returns(uint256) {
         return _amount * 3;
     }
-
     function payoutOf(address _addr) view external returns(uint256 payout, uint256 max_payout) {
         max_payout = this.maxPayoutOf(users[_addr].deposit_amount);
         if(users[_addr].isWithdrawActive){
@@ -539,5 +542,5 @@ contract EtherRolling is Ownable {
     }
 }
 
-//Creator  : Grim Reaper
-//Telegram : @grimreaper916
+// Creator : Grim Reaper
+// Telegram : @grimreaper916
