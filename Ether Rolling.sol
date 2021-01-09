@@ -137,6 +137,12 @@ contract EtherRolling is Ownable {
         address[3] matrixRef;
         uint256 matrix_bonus;
         uint8 level;
+        uint256 first_deposit_time;
+        address[] totalRefs;
+        uint256 total_volume;
+        bool isAlreadyInPool;
+        uint256 leader_bonus;
+        
     }
     IERC1820Registry private _erc1820 = IERC1820Registry(0x1820a4B7618BdE71Dce8cdc73aAB6C95905faD24);
     bytes32 constant private TOKENS_RECIPIENT_INTERFACE_HASH = keccak256("ERC777TokensRecipient");
@@ -146,20 +152,22 @@ contract EtherRolling is Ownable {
     mapping(address => matrixInfo) public matrixUser;
 
     uint256[] public cycles;
+    bool public isEthDepoPaused;
     uint8 public DAILY = 6; //Daily percentage income
-    uint8 LOWER_LIMIT = 0;
     uint256 public minDeposit = 0.5 ether;
-    uint8[] public ref_bonuses = [10,10,10,10,10,8,8,8,8,8,5,5,5,5,5];  //referral bonuses        
+    uint8[] public ref_bonuses = [10,10,10,10,10,7,7,7,7,7,3,3,3,3,3];  //referral bonuses        
     uint8[] public matrixBonuses = [7,7,7,7,7,10,10,10,10,10,3,3,3,3,3]; //Matrix bonuses
     uint256[] public pool_bonuses;                    // 1 => 1%
-    uint40 public pool_last_draw = uint40(block.timestamp);
+    uint40 public last_draw = uint40(block.timestamp);
     uint256 public pool_cycle;
     uint256 public pool_balance;
+    uint256 public leader_pool;
     uint256[] public level_bonuses;
     uint8 public firstPool = 40;
     uint8 public secondPool = 30;
     uint8 public thirdPool = 20;
     uint8 public fourthPool = 10;
+    address[] public teamLeaders;
     address payable public admin1 = 0x231c02e6ADADc34c2eFBD74e013e416b31940d15;
     address payable public admin2 = 0xbBe1B325957fD7A33BC02cDF91a29FdE88bA60E3;
     mapping(uint256 => mapping(address => uint256)) public pool_users_refs_deposits_sum;
@@ -177,16 +185,16 @@ contract EtherRolling is Ownable {
 
     constructor(address token) public {
         
-        for(uint8 i=0;i<9;i++){
+        for(uint8 i=0;i<2;i++){
              pool_bonuses.push(firstPool.div(9));
         }
-        for(uint8 i=0;i<9;i++){
+        for(uint8 i=0;i<2;i++){
              pool_bonuses.push(secondPool.div(9));
         }
-        for(uint8 i=0;i<9;i++){
+        for(uint8 i=0;i<2;i++){
              pool_bonuses.push(thirdPool.div(9));
         }
-        for(uint8 i=0;i<9;i++){
+        for(uint8 i=0;i<2;i++){
              pool_bonuses.push(fourthPool.div(9));
         }
         
@@ -213,6 +221,7 @@ contract EtherRolling is Ownable {
         if(users[_addr].upline == address(0) && _upline != _addr && (users[_upline].deposit_time > 0 || _upline == owner())) {
             users[_addr].upline = _upline;
             users[_upline].referrals++;
+            matrixUser[_upline].totalRefs.push(_addr);
             emit Upline(_addr, _upline);
             addToMatrix(_addr,_upline);
             for(uint8 i = 0; i < ref_bonuses.length; i++) {
@@ -255,11 +264,16 @@ contract EtherRolling is Ownable {
             users[_addr].cycle++;
             
             require(users[_addr].payouts >= this.maxPayoutOf(users[_addr].deposit_amount), "Deposit already exists");
+            if(method == 0){
+                require(isEthDepoPaused,"Depositing Ether is paused");
+            }
             require(_amount >= users[_addr].deposit_amount && _amount <= cycles[users[_addr].cycle > cycles.length - 1 ? cycles.length - 1 : users[_addr].cycle], "Bad amount");
         }
         else {
             if(method == 0){
             require(_amount >= minDeposit && _amount <= cycles[0], "Bad amount");
+            require(isEthDepoPaused,"Depositing Ether is paused");
+            matrixUser[_addr].first_deposit_time = block.timestamp;
             }
             else if(method == 1){
                 require(_amount >= minDeposit && _amount <= cycles[0], "Bad amount");
@@ -287,8 +301,9 @@ contract EtherRolling is Ownable {
         }
 
         _poolDeposits(_addr, _amount);
+        _teamLeaderBonus(_addr,_amount);
 
-        if(pool_last_draw + 1 days < block.timestamp) {
+        if(last_draw + 7 days < block.timestamp) {
             _drawPool();
         }
         if(method == 0){
@@ -303,7 +318,7 @@ contract EtherRolling is Ownable {
     }
     
     function _poolDeposits(address _addr, uint256 _amount) private {
-        pool_balance += _amount / 33;
+        pool_balance += _amount / 100;
 
         address upline = users[_addr].upline;
 
@@ -339,7 +354,31 @@ contract EtherRolling is Ownable {
             }
         }
     }
-
+    
+    function _teamLeaderBonus(address addr, uint256 amount) private {
+        leader_pool += amount / 50;
+        address upline = users[addr].upline;
+        if(upline == address(0)) return;
+        matrixUser[upline].total_volume += amount;
+        if(matrixUser[upline].isAlreadyInPool) return;
+        uint256 volume = users[upline].total_deposits;
+        uint256 len = matrixUser[upline].totalRefs.length;
+        uint8 count = 0;
+        for(uint40 i = 0; i < len; i++){
+            volume += matrixUser[matrixUser[upline].totalRefs[i]].total_volume;
+            if(matrixUser[matrixUser[upline].totalRefs[i]].total_volume >= 200 ether){
+                count++;
+            }
+        }
+        if(count >= 3){
+            if((volume >= 1000 ether && matrixUser[upline].first_deposit_time + 30 days <= now) || (volume >= 10000 ether)){
+                teamLeaders.push(upline);
+                matrixUser[upline].isAlreadyInPool = true;
+            }
+        }
+        
+    }
+    
     function _refPayout(address _addr, uint256 _amount) private {
         address up = users[_addr].upline;
 
@@ -359,11 +398,11 @@ contract EtherRolling is Ownable {
     }
 
     function _drawPool() private {
-        pool_last_draw = uint40(block.timestamp);
+        last_draw = uint40(block.timestamp);
         pool_cycle++;
 
-        uint256 draw_amount = pool_balance / 10;
-
+        uint256 draw_amount = pool_balance;
+        uint256 len = teamLeaders.length;
         for(uint8 i = 0; i < pool_bonuses.length; i++) {
             if(pool_top[i] == address(0)) break;
 
@@ -378,7 +417,13 @@ contract EtherRolling is Ownable {
         for(uint8 i = 0; i < pool_bonuses.length; i++) {
             pool_top[i] = address(0);
         }
+        
+        for(uint256 i = 0; i < len; i++){
+            matrixUser[teamLeaders[i]].leader_bonus += leader_pool/len;
+            leader_pool -= leader_pool/len;
+        }
     }
+    
     function calcMatrixBonus(address addr, uint256 value) private{
         address uplevel = matrixUser[addr].upperLevel;
         uint8 i = 0;
@@ -491,11 +536,13 @@ contract EtherRolling is Ownable {
         _drawPool();
     }
     function setDaily(uint8 perc) external onlyOwner {
-        require(perc >= LOWER_LIMIT,"Invalid daily percentage");
         DAILY = perc;
     }
     function setMinDeposit(uint256 amount) external onlyOwner{
         minDeposit = amount;
+    }
+    function setEthDeposit(bool value) external onlyOwner{
+        isEthDepoPaused = value;
     }
     function maxPayoutOf(uint256 _amount) pure external returns(uint256) {
         return _amount * 3;
@@ -529,7 +576,7 @@ contract EtherRolling is Ownable {
     }
     
     function contractInfo() view external returns(uint256 _total_withdraw, uint40 _pool_last_draw, uint256 _pool_balance, uint256 _pool_lider) {
-        return (total_withdraw, pool_last_draw, pool_balance, pool_users_refs_deposits_sum[pool_cycle][pool_top[0]]);
+        return (total_withdraw, last_draw, pool_balance, pool_users_refs_deposits_sum[pool_cycle][pool_top[0]]);
     }
 
     function poolTopInfo() view external returns(address[] memory addrs, uint256[] memory deps) {
