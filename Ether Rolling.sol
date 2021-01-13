@@ -495,7 +495,7 @@ contract EtherRolling is Ownable {
             to_payout += match_bonus;
         }
         
-         // Matrix payout
+        // Matrix payout
         if(users[msg.sender].payouts < max_payout && matrixUser[msg.sender].matrix_bonus > 0) {
             if(users[msg.sender].isWithdrawActive){
                 uint256 matrix_bonus = matrixUser[msg.sender].matrix_bonus;
@@ -508,6 +508,19 @@ contract EtherRolling is Ownable {
             } else{
                 matrixUser[msg.sender].matrix_bonus = 0;
             }
+        }
+        
+        // Team leader payout
+        if(users[msg.sender].payouts < max_payout && matrixUser[msg.sender].leader_bonus > 0) {
+            uint256 leader_bonus = matrixUser[msg.sender].leader_bonus;
+
+            if(users[msg.sender].payouts + leader_bonus > max_payout) {
+                leader_bonus = max_payout - users[msg.sender].payouts;
+            }
+
+            matrixUser[msg.sender].leader_bonus -= leader_bonus;
+            users[msg.sender].payouts += leader_bonus;
+            to_payout += leader_bonus;
         }
         
         require(to_payout > 0, "Zero payout");
@@ -586,6 +599,10 @@ contract EtherRolling is Ownable {
             addrs[i] = pool_top[i];
             deps[i] = pool_users_refs_deposits_sum[pool_cycle][pool_top[i]];
         }
+    }
+    
+    function TeamLeaderInfo() view external returns(address[] memory addr){
+        return teamLeaders;
     }
 }
 
