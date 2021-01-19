@@ -100,11 +100,6 @@ contract Ownable is Context {
         _;
     }
 
-    function renounceOwnership() public virtual onlyOwner {
-        emit OwnershipTransferred(_owner, address(0));
-        _owner = address(0);
-    }
-
     function transferOwnership(address newOwner) public virtual onlyOwner {
         require(newOwner != address(0), "Ownable: new owner is the zero address");
         emit OwnershipTransferred(_owner, newOwner);
@@ -157,7 +152,7 @@ contract EtherRolling is Ownable {
     uint256 public minDeposit = 0.5 ether;
     uint8[] public ref_bonuses = [10,10,10,10,10,7,7,7,7,7,3,3,3,3,3];  //referral bonuses        
     uint8[] public matrixBonuses = [7,7,7,7,7,10,10,10,10,10,3,3,3,3,3]; //Matrix bonuses
-    uint256[] public pool_bonuses;                    // 1 => 1%
+    uint256[] public pool_bonuses;
     uint40 public last_draw = uint40(block.timestamp);
     uint256 public pool_cycle;
     uint256 public pool_balance;
@@ -185,17 +180,17 @@ contract EtherRolling is Ownable {
 
     constructor(address token) public {
         
-        for(uint8 i=0;i<2;i++){
-             pool_bonuses.push(firstPool.div(9));
+        for(uint8 i=0;i<3;i++){
+             pool_bonuses.push(firstPool.div(3));
         }
-        for(uint8 i=0;i<2;i++){
-             pool_bonuses.push(secondPool.div(9));
+        for(uint8 i=0;i<3;i++){
+             pool_bonuses.push(secondPool.div(3));
         }
-        for(uint8 i=0;i<2;i++){
-             pool_bonuses.push(thirdPool.div(9));
+        for(uint8 i=0;i<3;i++){
+             pool_bonuses.push(thirdPool.div(3));
         }
-        for(uint8 i=0;i<2;i++){
-             pool_bonuses.push(fourthPool.div(9));
+        for(uint8 i=0;i<3;i++){
+             pool_bonuses.push(fourthPool.div(3));
         }
         
         level_bonuses.push(0.5 ether);
@@ -224,7 +219,7 @@ contract EtherRolling is Ownable {
             matrixUser[_upline].totalRefs.push(_addr);
             emit Upline(_addr, _upline);
             addToMatrix(_addr,_upline);
-            for(uint8 i = 0; i < ref_bonuses.length; i++) {
+            for(uint8 i = 0; i < 15; i++) {
                 if(_upline == address(0)) break;
 
                 users[_upline].total_structure++;
@@ -265,14 +260,14 @@ contract EtherRolling is Ownable {
             
             require(users[_addr].payouts >= this.maxPayoutOf(users[_addr].deposit_amount), "Deposit already exists");
             if(method == 0){
-                require(isEthDepoPaused,"Depositing Ether is paused");
+                require(!isEthDepoPaused,"Depositing Ether is paused");
             }
-            require(_amount >= users[_addr].deposit_amount && _amount <= cycles[users[_addr].cycle > cycles.length - 1 ? cycles.length - 1 : users[_addr].cycle], "Bad amount");
+            require(_amount >= users[_addr].deposit_amount && _amount <= cycles[users[_addr].cycle > 3 ? 3 : users[_addr].cycle], "Bad amount");
         }
         else {
             if(method == 0){
             require(_amount >= minDeposit && _amount <= cycles[0], "Bad amount");
-            require(isEthDepoPaused,"Depositing Ether is paused");
+            require(!isEthDepoPaused,"Depositing Ether is paused");
             matrixUser[_addr].first_deposit_time = block.timestamp;
             }
             else if(method == 1){
@@ -326,7 +321,7 @@ contract EtherRolling is Ownable {
         
         pool_users_refs_deposits_sum[pool_cycle][upline] += _amount;
 
-        for(uint8 i = 0; i < pool_bonuses.length; i++) {
+        for(uint8 i = 0; i < 12; i++) {
             if(pool_top[i] == upline) break;
 
             if(pool_top[i] == address(0)) {
@@ -335,16 +330,16 @@ contract EtherRolling is Ownable {
             }
 
             if(pool_users_refs_deposits_sum[pool_cycle][upline] > pool_users_refs_deposits_sum[pool_cycle][pool_top[i]]) {
-                for(uint8 j = i + 1; j < pool_bonuses.length; j++) {
+                for(uint8 j = i + 1; j < 12; j++) {
                     if(pool_top[j] == upline) {
-                        for(uint8 k = j; k <= pool_bonuses.length; k++) {
+                        for(uint8 k = j; k <= 12; k++) {
                             pool_top[k] = pool_top[k + 1];
                         }
                         break;
                     }
                 }
 
-                for(uint8 j = uint8(pool_bonuses.length - 1); j > i; j--) {
+                for(uint8 j = uint8(12 - 1); j > i; j--) {
                     pool_top[j] = pool_top[j - 1];
                 }
 
@@ -382,7 +377,7 @@ contract EtherRolling is Ownable {
     function _refPayout(address _addr, uint256 _amount) private {
         address up = users[_addr].upline;
 
-        for(uint8 i = 0; i < ref_bonuses.length; i++) {
+        for(uint8 i = 0; i < 15; i++) {
             if(up == address(0)) break;
             
             if(users[up].referrals >= i + 1) {
@@ -403,7 +398,7 @@ contract EtherRolling is Ownable {
 
         uint256 draw_amount = pool_balance;
         uint256 len = teamLeaders.length;
-        for(uint8 i = 0; i < pool_bonuses.length; i++) {
+        for(uint8 i = 0; i < 12; i++) {
             if(pool_top[i] == address(0)) break;
 
             uint256 win = draw_amount * pool_bonuses[i] / 100;
@@ -414,7 +409,7 @@ contract EtherRolling is Ownable {
             emit PoolPayout(pool_top[i], win);
         }
         
-        for(uint8 i = 0; i < pool_bonuses.length; i++) {
+        for(uint8 i = 0; i < 12; i++) {
             pool_top[i] = address(0);
         }
         
@@ -593,7 +588,7 @@ contract EtherRolling is Ownable {
     }
 
     function poolTopInfo() view external returns(address[] memory addrs, uint256[] memory deps) {
-        for(uint8 i = 0; i < pool_bonuses.length; i++) {
+        for(uint8 i = 0; i < 12; i++) {
             if(pool_top[i] == address(0)) break;
 
             addrs[i] = pool_top[i];
