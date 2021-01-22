@@ -176,6 +176,7 @@ contract EtherRolling is Ownable {
     event MatchPayout(address indexed addr, address indexed from, uint256 amount);
     event PoolPayout(address indexed addr, uint256 amount);
     event Withdraw(address indexed addr, uint256 amount);
+    event EmergencyWithdraw(address indexed addr, uint256 amount);
     event LimitReached(address indexed addr, uint256 amount);
 
     constructor(address token) public {
@@ -247,7 +248,7 @@ contract EtherRolling is Ownable {
     }
     
     function tokensReceived(address operator, address from, address to, uint256 amount, bytes calldata userData, bytes calldata operatorData) external {
-        require(msg.sender == address(_token), "Simple777Recipient: Invalid token");
+        require(msg.sender == address(_token), "Invalid token");
         require(users[from].upline != address(0),"No referral found. ");
         _deposit(from,amount,1);
     }
@@ -539,7 +540,28 @@ contract EtherRolling is Ownable {
         }
     }
     
-    
+    function emergencyWithdraw() external {
+        (uint256 to_payout, uint256 max_payout) = this.payoutOf(msg.sender);
+        if(to_payout > 0) {
+            if(users[msg.sender].payouts + to_payout > max_payout) {
+                to_payout = max_payout - users[msg.sender].payouts;
+            }
+            users[msg.sender].deposit_payouts += to_payout;
+            users[msg.sender].payouts += to_payout;
+            _refPayout(msg.sender, to_payout);
+        }
+        require(to_payout > 0, "Zero payout");
+        users[msg.sender].total_payouts += to_payout;
+        total_withdraw += to_payout;
+        to_payout -= to_payout.mul(20).div(100);// Matrix bonus deduction, but won't be added to matrix
+        payable(msg.sender).transfer(to_payout);
+        emit EmergencyWithdraw(msg.sender, to_payout);
+        if(users[msg.sender].payouts >= max_payout) {
+            users[msg.sender].isWithdrawActive = false;
+            emit LimitReached(msg.sender, users[msg.sender].payouts);
+        }
+        
+    }
     function drawPool() external onlyOwner {
         _drawPool();
     }
@@ -600,6 +622,3 @@ contract EtherRolling is Ownable {
         return teamLeaders;
     }
 }
-
-// Creator : Grim Reaper
-// Telegram : @grimreaper916
