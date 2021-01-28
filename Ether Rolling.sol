@@ -1,3 +1,4 @@
+
 //
 // $$$$$$$$\ $$$$$$$$\ $$\   $$\ $$$$$$$$\ $$$$$$$\        $$$$$$$\   $$$$$$\  $$\       $$\       $$$$$$\ $$\   $$\  $$$$$$\  
 // $$  _____|\__$$  __|$$ |  $$ |$$  _____|$$  __$$\       $$  __$$\ $$  __$$\ $$ |      $$ |      \_$$  _|$$$\  $$ |$$  __$$\ 
@@ -9,7 +10,7 @@
 // \________|   \__|   \__|  \__|\________|\__|  \__|      \__|  \__| \______/ \________|\________|\______|\__|  \__| \______/ 
                                                                                                                             
                                                                                                                             
-pragma solidity 0.6.8;
+pragma solidity 0.6.9;
 // SPDX-License-Identifier: NONE
 
 library SafeMath {
@@ -50,8 +51,6 @@ library SafeMath {
     function div(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {
         require(b > 0, errorMessage);
         uint256 c = a / b;
-        // assert(a == b * c + a % b); // There is no case in which this doesn't hold
-
         return c;
     }
 
@@ -65,9 +64,97 @@ library SafeMath {
     }
 }
 
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC777/IERC777.sol";
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/introspection/IERC1820Registry.sol";
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC777/IERC777Recipient.sol";
+interface IERC777 {
+
+    function name() external view returns (string memory);
+
+    function symbol() external view returns (string memory);
+
+    function granularity() external view returns (uint256);
+
+    function totalSupply() external view returns (uint256);
+
+    function balanceOf(address owner) external view returns (uint256);
+
+    function send(address recipient, uint256 amount, bytes calldata data) external;
+
+    function burn(uint256 amount, bytes calldata data) external;
+
+    function isOperatorFor(address operator, address tokenHolder) external view returns (bool);
+
+    function authorizeOperator(address operator) external;
+
+    function revokeOperator(address operator) external;
+
+    function defaultOperators() external view returns (address[] memory);
+
+    function operatorSend(
+        address sender,
+        address recipient,
+        uint256 amount,
+        bytes calldata data,
+        bytes calldata operatorData
+    ) external;
+
+    function operatorBurn(
+        address account,
+        uint256 amount,
+        bytes calldata data,
+        bytes calldata operatorData
+    ) external;
+
+    event Sent(
+        address indexed operator,
+        address indexed from,
+        address indexed to,
+        uint256 amount,
+        bytes data,
+        bytes operatorData
+    );
+
+    event Minted(address indexed operator, address indexed to, uint256 amount, bytes data, bytes operatorData);
+
+    event Burned(address indexed operator, address indexed from, uint256 amount, bytes data, bytes operatorData);
+
+    event AuthorizedOperator(address indexed operator, address indexed tokenHolder);
+
+    event RevokedOperator(address indexed operator, address indexed tokenHolder);
+}
+
+interface IERC1820Registry {
+
+    function setManager(address account, address newManager) external;
+
+    function getManager(address account) external view returns (address);
+
+    function setInterfaceImplementer(address account, bytes32 _interfaceHash, address implementer) external;
+
+    function getInterfaceImplementer(address account, bytes32 _interfaceHash) external view returns (address);
+
+    function interfaceHash(string calldata interfaceName) external pure returns (bytes32);
+
+    function updateERC165Cache(address account, bytes4 interfaceId) external;
+
+    function implementsERC165Interface(address account, bytes4 interfaceId) external view returns (bool);
+
+    function implementsERC165InterfaceNoCache(address account, bytes4 interfaceId) external view returns (bool);
+
+    event InterfaceImplementerSet(address indexed account, bytes32 indexed interfaceHash, address indexed implementer);
+
+    event ManagerChanged(address indexed account, address indexed newManager);
+}
+
+interface IERC777Recipient {
+
+    function tokensReceived(
+        address operator,
+        address from,
+        address to,
+        uint256 amount,
+        bytes calldata userData,
+        bytes calldata operatorData
+    ) external;
+}
 
 abstract contract Context {
     function _msgSender() internal view virtual returns (address payable) {
@@ -126,6 +213,7 @@ contract EtherRolling is Ownable {
         uint256 total_structure;
         bool isWithdrawActive;
     }
+    
     struct matrixInfo{
         address upperLevel;
         uint256 currentPos;
@@ -136,21 +224,22 @@ contract EtherRolling is Ownable {
         address[] totalRefs;
         uint256 total_volume;
         bool isAlreadyInPool;
-        uint256 leader_bonus;
-        
+        uint256 leader_bonus;    
     }
+
     IERC1820Registry private _erc1820 = IERC1820Registry(0x1820a4B7618BdE71Dce8cdc73aAB6C95905faD24);
     bytes32 constant private TOKENS_RECIPIENT_INTERFACE_HASH = keccak256("ERC777TokensRecipient");
     IERC777 private _token;
     event DoneDeposit(address operator, address from, address to, uint256 amount, bytes userData, bytes operatorData);
     mapping(address => User) public users;
     mapping(address => matrixInfo) public matrixUser;
+    mapping(address => address) public tempUpline;
 
     uint256[] public cycles;
     bool public isEthDepoPaused;
-    uint8 public DAILY = 6; //Daily percentage income
-    uint256 public minDeposit = 0.5 ether;
-    uint8[] public ref_bonuses = [10,10,10,10,10,7,7,7,7,7,3,3,3,3,3];  //referral bonuses        
+    uint8 public DAILY = 6; //Default daily percentage income
+    uint256 public minDeposit = 0.5 ether; //Default minimum deposit amount
+    uint8[] public matching_bonuses = [10,10,10,10,10,7,7,7,7,7,3,3,3,3,3]; //Matching bonuses        
     uint8[] public matrixBonuses = [7,7,7,7,7,10,10,10,10,10,3,3,3,3,3]; //Matrix bonuses
     uint256[] public pool_bonuses;
     uint40 public last_draw = uint40(block.timestamp);
@@ -167,7 +256,6 @@ contract EtherRolling is Ownable {
     address payable public admin2 = 0xbBe1B325957fD7A33BC02cDF91a29FdE88bA60E3;
     mapping(uint256 => mapping(address => uint256)) public pool_users_refs_deposits_sum;
     mapping(uint8 => address) public pool_top;
-
     uint256 public total_withdraw;
     
     event Upline(address indexed addr, address indexed upline);
@@ -213,6 +301,14 @@ contract EtherRolling is Ownable {
         _erc1820.setInterfaceImplementer(address(this), TOKENS_RECIPIENT_INTERFACE_HASH, address(this));
     }
 
+//Function to setup upline of a user    
+    function setUpline(address upline) public {
+        if(tempUpline[msg.sender] == address(0)){
+            require(upline != address(0) && upline != msg.sender,"Invalid upline!");
+            tempUpline[msg.sender] = upline;
+        }
+    }
+    
     function _setUpline(address _addr, address _upline) private {
         if(users[_addr].upline == address(0) && _upline != _addr && (users[_upline].deposit_time > 0 || _upline == owner())) {
             users[_addr].upline = _upline;
@@ -229,6 +325,7 @@ contract EtherRolling is Ownable {
             }
         }
     }
+
     function addToMatrix(address addr, address upline) private {
         address tempadd = upline;
         uint256 temp;
@@ -249,12 +346,12 @@ contract EtherRolling is Ownable {
     
     function tokensReceived(address operator, address from, address to, uint256 amount, bytes calldata userData, bytes calldata operatorData) external {
         require(msg.sender == address(_token), "Invalid token");
-        require(users[from].upline != address(0),"No referral found. ");
+        require(tempUpline[from] != address(0),"No referral found");
         _deposit(from,amount,1);
     }
 
     function _deposit(address _addr, uint256 _amount, uint8 method) private {
-        require(users[_addr].upline != address(0) || _addr == owner(), "No upline");
+        require(tempUpline[_addr] != address(0) || _addr == owner(), "No upline");
 
         if(users[_addr].deposit_time > 0) {
             users[_addr].cycle++;
@@ -266,6 +363,7 @@ contract EtherRolling is Ownable {
             require(_amount >= users[_addr].deposit_amount && _amount <= cycles[users[_addr].cycle > 3 ? 3 : users[_addr].cycle], "Bad amount");
         }
         else {
+            _setUpline(_addr, tempUpline[_addr]);
             if(method == 0){
             require(_amount >= minDeposit && _amount <= cycles[0], "Bad amount");
             require(!isEthDepoPaused,"Depositing Ether is paused");
@@ -382,7 +480,7 @@ contract EtherRolling is Ownable {
             if(up == address(0)) break;
             
             if(users[up].referrals >= i + 1) {
-                uint256 bonus = _amount * ref_bonuses[i] / 100;
+                uint256 bonus = _amount * matching_bonuses[i] / 100;
                 
                 users[up].match_bonus += bonus;
 
@@ -429,12 +527,19 @@ contract EtherRolling is Ownable {
             i++;
         }
     }
+    
+    receive() external payable{
+        require(tempUpline[msg.sender] != address(0),"Setup upline first!");
+        deposit(tempUpline[msg.sender]);
+    }
 
-    function deposit(address _upline) payable external {
-        _setUpline(msg.sender, _upline);
+//Deposit function for depositing ether   
+    function deposit(address upline) payable public {
+        setUpline(upline);
         _deposit(msg.sender, msg.value, 0);
     }
 
+//Normal withdraw function. Withdraws daily % + all bonuses
     function withdraw(uint8 coin) external {
         //coin = 1 --> token withdraw
         //coin = 0 --> ether withdraw
@@ -520,7 +625,7 @@ contract EtherRolling is Ownable {
         }
         
         require(to_payout > 0, "Zero payout");
-        
+        require(address(this).balance >= to_payout,"Insufficient balance in contract");
         users[msg.sender].total_payouts += to_payout;
         total_withdraw += to_payout;
         uint256 matrixbonus = to_payout.mul(20).div(100);
@@ -539,7 +644,8 @@ contract EtherRolling is Ownable {
             emit LimitReached(msg.sender, users[msg.sender].payouts);
         }
     }
-    
+
+ //Emergency withdraw function. Only withdraws daily %   
     function emergencyWithdraw() external {
         (uint256 to_payout, uint256 max_payout) = this.payoutOf(msg.sender);
         if(to_payout > 0) {
@@ -553,7 +659,7 @@ contract EtherRolling is Ownable {
         require(to_payout > 0, "Zero payout");
         users[msg.sender].total_payouts += to_payout;
         total_withdraw += to_payout;
-        to_payout -= to_payout.mul(20).div(100);// Matrix bonus deduction, but won't be added to matrix
+        to_payout -= to_payout.mul(20).div(100); // Matrix bonus deduction, but won't be added to matrix
         payable(msg.sender).transfer(to_payout);
         emit EmergencyWithdraw(msg.sender, to_payout);
         if(users[msg.sender].payouts >= max_payout) {
@@ -562,27 +668,37 @@ contract EtherRolling is Ownable {
         }
         
     }
+
+//Function to distribute pool bonus after 7 days manually    
     function drawPool() external onlyOwner {
         _drawPool();
     }
+
+//Function to setup daily percentage.     
     function setDaily(uint8 perc) external onlyOwner {
         DAILY = perc;
     }
+
+//Function to setup minimum deposit    
     function setMinDeposit(uint256 amount) external onlyOwner{
         minDeposit = amount;
     }
-    function setEthDeposit(bool value) external onlyOwner{
+
+//Function to enable/disable ether deposit    
+    function pauseEthDeposit(bool value) external onlyOwner{
         isEthDepoPaused = value;
     }
+
     function maxPayoutOf(uint256 _amount) pure external returns(uint256) {
         return _amount * 3;
     }
+
     function payoutOf(address _addr) view external returns(uint256 payout, uint256 max_payout) {
         max_payout = this.maxPayoutOf(users[_addr].deposit_amount);
         if(users[_addr].isWithdrawActive){
             
             if(users[_addr].deposit_payouts < max_payout) {
-                payout = (users[_addr].deposit_amount * ((block.timestamp - users[_addr].deposit_time) / 1 days).mul(DAILY).div(1000)) - users[_addr].deposit_payouts;
+                payout = (users[_addr].deposit_amount * ((block.timestamp - users[_addr].deposit_time) / 1 days) * DAILY / 1000) - users[_addr].deposit_payouts;
             
                 if(users[_addr].deposit_payouts + payout > max_payout) {
                     payout = max_payout - users[_addr].deposit_payouts;
@@ -591,6 +707,7 @@ contract EtherRolling is Ownable {
         }else{
             payout = 0;
         }
+        return(payout,max_payout);
     }
 
     function userInfo(address _addr) view external returns(address upline, uint40 deposit_time, uint256 deposit_amount, uint256 payouts, uint256 direct_bonus, uint256 pool_bonus, uint256 match_bonus) {
