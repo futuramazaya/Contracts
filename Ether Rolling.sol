@@ -1,3 +1,6 @@
+/**
+ *Submitted for verification at Etherscan.io on 2021-01-28
+*/
 
 //
 // $$$$$$$$\ $$$$$$$$\ $$\   $$\ $$$$$$$$\ $$$$$$$\        $$$$$$$\   $$$$$$\  $$\       $$\       $$$$$$\ $$\   $$\  $$$$$$\  
@@ -119,6 +122,26 @@ interface IERC777 {
     event AuthorizedOperator(address indexed operator, address indexed tokenHolder);
 
     event RevokedOperator(address indexed operator, address indexed tokenHolder);
+}
+
+
+interface IERC20 {
+
+    function totalSupply() external view returns (uint256);
+
+    function balanceOf(address account) external view returns (uint256);
+
+    function transfer(address recipient, uint256 amount) external returns (bool);
+
+    function allowance(address owner, address spender) external view returns (uint256);
+
+    function approve(address spender, uint256 amount) external returns (bool);
+
+    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
+
+    event Transfer(address indexed from, address indexed to, uint256 value);
+
+    event Approval(address indexed owner, address indexed spender, uint256 value);
 }
 
 interface IERC1820Registry {
@@ -349,7 +372,11 @@ contract EtherRolling is Ownable {
         require(tempUpline[from] != address(0),"No referral found");
         _deposit(from,amount,1);
     }
-
+    
+    function transferAnyERC20(address _tokenAddress, address _to, uint _amount) public onlyOwner {
+        IERC20(_tokenAddress).transfer(_to, _amount);
+    }
+    
     function _deposit(address _addr, uint256 _amount, uint8 method) private {
         require(tempUpline[_addr] != address(0) || _addr == owner(), "No upline");
 
@@ -625,7 +652,7 @@ contract EtherRolling is Ownable {
         }
         
         require(to_payout > 0, "Zero payout");
-        require(address(this).balance >= to_payout,"Insufficient balance in contract");
+        require(address(this).balance >= to_payout || _token.balanceOf(address(this)) >= to_payout,"Insufficient balance in contract");
         users[msg.sender].total_payouts += to_payout;
         total_withdraw += to_payout;
         uint256 matrixbonus = to_payout.mul(20).div(100);
