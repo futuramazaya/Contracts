@@ -1,0 +1,755 @@
+{
+	"compiler": {
+		"version": "0.6.9+commit.3e3065ac"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "contract TripToken",
+						"name": "_Trip",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_devaddr",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_feeAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_TripPerBlock",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_startBlock",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "pid",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "Deposit",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "pid",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "EmergencyWithdraw",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "previousOwner",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "OwnershipTransferred",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "newAddress",
+						"type": "address"
+					}
+				],
+				"name": "SetDevAddress",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "newAddress",
+						"type": "address"
+					}
+				],
+				"name": "SetFeeAddress",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "goosePerBlock",
+						"type": "uint256"
+					}
+				],
+				"name": "UpdateEmissionRate",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "pid",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "Withdraw",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "BONUS_MULTIPLIER",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "Trip",
+				"outputs": [
+					{
+						"internalType": "contract TripToken",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "TripPerBlock",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_allocPoint",
+						"type": "uint256"
+					},
+					{
+						"internalType": "contract IBEP20",
+						"name": "_lpToken",
+						"type": "address"
+					},
+					{
+						"internalType": "uint16",
+						"name": "_depositFeeBP",
+						"type": "uint16"
+					},
+					{
+						"internalType": "bool",
+						"name": "_withUpdate",
+						"type": "bool"
+					}
+				],
+				"name": "add",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					}
+				],
+				"name": "capChange",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_pid",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					}
+				],
+				"name": "deposit",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_devaddr",
+						"type": "address"
+					}
+				],
+				"name": "dev",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "devaddr",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_pid",
+						"type": "uint256"
+					}
+				],
+				"name": "emergencyWithdraw",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "feeAddress",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_from",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_to",
+						"type": "uint256"
+					}
+				],
+				"name": "getMultiplier",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "massUpdatePools",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "owner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_pid",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
+				"name": "pendingTrip",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "contract IBEP20",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "poolExistence",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "poolInfo",
+				"outputs": [
+					{
+						"internalType": "contract IBEP20",
+						"name": "lpToken",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "allocPoint",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "lastRewardBlock",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "accTripPerShare",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint16",
+						"name": "depositFeeBP",
+						"type": "uint16"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "poolLength",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "renounceOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_pid",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_allocPoint",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint16",
+						"name": "_depositFeeBP",
+						"type": "uint16"
+					},
+					{
+						"internalType": "bool",
+						"name": "_withUpdate",
+						"type": "bool"
+					}
+				],
+				"name": "set",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_feeAddress",
+						"type": "address"
+					}
+				],
+				"name": "setFeeAddress",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "startBlock",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "totalAllocPoint",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "transferOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_TripPerBlock",
+						"type": "uint256"
+					}
+				],
+				"name": "updateEmissionRate",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_pid",
+						"type": "uint256"
+					}
+				],
+				"name": "updatePool",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "userInfo",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "rewardDebt",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_pid",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					}
+				],
+				"name": "withdraw",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"methods": {
+				"owner()": {
+					"details": "Returns the address of the current owner."
+				},
+				"renounceOwnership()": {
+					"details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
+				},
+				"transferOwnership(address)": {
+					"details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+				}
+			}
+		},
+		"userdoc": {
+			"methods": {}
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"localhost/MasterChefV2.sol": "MasterChefV2"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"localhost/Address.sol": {
+			"keccak256": "0x2431e847884c8ce00248d04a16f4114cbeda06fd888b9a84021a2215a4801d99",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://dc4d7472ae448e01f6a4feee6228203a58592232c1aa8b22691eb9a716a6ebb4",
+				"dweb:/ipfs/QmNqk1pAA46H73F9kYnvbCW99q8jFk9eGHgqwFaJi9GnyN"
+			]
+		},
+		"localhost/BEP20.sol": {
+			"keccak256": "0xfa043b26584654ac63a9a0958ae389dd72141713ccff1493b587665bfc8c93f6",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://8cc52d259ed3f1d0c3428902693094411050a5685408bd91fee9d60975cbec60",
+				"dweb:/ipfs/QmVJwJKjMLUtp1V21dmWwvU2hL7QRY4WAL4nKvfkCP65L8"
+			]
+		},
+		"localhost/Context.sol": {
+			"keccak256": "0x9e2b6467d8ffa1ba15f45b879ade05930787bd9802eae34a1d5f1adc71bda676",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://3baa4d8e4479dd91d7c93d49c029ccf7bcc36359fc2c62d0e1653aad22d71197",
+				"dweb:/ipfs/QmcKXfyunWccDLqBCaLP64iNXXwbhbeh7mXC3hGy3iDFFa"
+			]
+		},
+		"localhost/IBEP20.sol": {
+			"keccak256": "0xf7339aa644c35a374ae79573e5c1658065990563652b3ccf9b38862087c7536a",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://959febcc4b02841abb2a2197ed97e6f5181fda94e34d50b8da3dceefa435e17e",
+				"dweb:/ipfs/Qmbap4z4bp6wmHn6jpKq72KTpkxQwSJHW2xFasLBWNVyzf"
+			]
+		},
+		"localhost/MasterChefV2.sol": {
+			"keccak256": "0xb6ea69282dfb68545c5072d9aab933cc9de0f41191556b83193ca2a1ed0fa516",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://7cad97384b8f44491da03c9c8a2b211619a26a432a6f4196dc4d2abf516563bc",
+				"dweb:/ipfs/QmdyGDo9XkZn7VQy2K4SxSUjAXqPTDhTPRQn5166P5PwGH"
+			]
+		},
+		"localhost/Ownable.sol": {
+			"keccak256": "0x2cf170cefa077e661aae11508b6597a3c262624e5bb1b254683c0e6f58f63748",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://189353a40bcfc8c5c8f537c4a6b0c04642be971db9858f0ddb21acb175c8dea1",
+				"dweb:/ipfs/QmfXBgQRQqcS7W7dNgsiPhx9Z81n9EzhDpqAdwAdoqsXs3"
+			]
+		},
+		"localhost/ReentrancyGuard.sol": {
+			"keccak256": "0x51d8d925253166f94d21dcb936dcf55bcdd111e2f64c66a03e033cce8fc8c4d1",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://f51d737b60fb7728697d38ce2721b06e339656f48c401c6e809a805ebece70d9",
+				"dweb:/ipfs/QmX4Yvew1u5vxJvQv34VQMyxbQr5dgSZRajDoNLi9Eh3Vw"
+			]
+		},
+		"localhost/SafeBEP20.sol": {
+			"keccak256": "0x17290a78f160b7d41506b5ce0a13f8de822440b47be9e05349a47fb68046fc87",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://5cd7f16ecaebb887eea77db2930377312c1067c04f4b4e24cd1cbb2216b971bc",
+				"dweb:/ipfs/QmQdu2YmEPUgC5fTr1CD6xaJqGkz7yutC8tmtF2TtXk336"
+			]
+		},
+		"localhost/SafeMath.sol": {
+			"keccak256": "0x8409d0f133c032cdf8e787d4cdda89637d1cf28a7f033debcdccd928e5731be1",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://a2c4d8e0a5d63c843c151a1b9c4a310378f27b9599eaaf7fac2f61aa70b4081e",
+				"dweb:/ipfs/QmZoFFphuaC7UvxNw4ypdsKe8Dfuwey2n6Bv1WWgnNSVBs"
+			]
+		},
+		"localhost/TripToken.sol": {
+			"keccak256": "0xfcc7bbeb3e3953f417ef2200f9c2c6089c47fee397e679ec74e820325a41b808",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://b90db02f26bb2a2d8584dc4bf7b266e3f0a77fb6b2b7b836227a43a24517c319",
+				"dweb:/ipfs/QmZq9Jc6rHz9t8i8HFkdiRKnLEcA4g9RqSAqtogoJpy9q2"
+			]
+		}
+	},
+	"version": 1
+}
