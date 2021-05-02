@@ -1,0 +1,40 @@
+{
+	"compiler": {
+		"version": "0.6.6+commit.6c089d02"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"methods": {}
+		},
+		"userdoc": {
+			"methods": {}
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"DragonBall AMM/Router.sol": "TransferHelper"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"DragonBall AMM/Router.sol": {
+			"keccak256": "0xb1ec431bc0dc6b7990db302c589bfd12fee6cee745694c9c914f8a0cdccaa15c",
+			"urls": [
+				"bzz-raw://5c1f9ff04cf758d2de41c2ff93544ba56b666bf333014983500182d052b00150",
+				"dweb:/ipfs/QmQG2N7cC4k9D3ySEKZTLhYXbm8PZdFqSKq7uS6yzdAz8N"
+			]
+		}
+	},
+	"version": 1
+}

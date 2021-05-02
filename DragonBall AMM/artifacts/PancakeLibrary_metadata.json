@@ -1,0 +1,40 @@
+{
+	"compiler": {
+		"version": "0.6.6+commit.6c089d02"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"methods": {}
+		},
+		"userdoc": {
+			"methods": {}
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"DragonBall AMM/Router.sol": "PancakeLibrary"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"DragonBall AMM/Router.sol": {
+			"keccak256": "0xa809fb2092a3240a7eb388afe1c771c55b90b323a277193c56259281747dce67",
+			"urls": [
+				"bzz-raw://443b571139e83084fb40c2e1124d79c659ba3c71ebb0aafd68c36571d8484a7d",
+				"dweb:/ipfs/QmS8ifwq4xDJpZftzjhuMvLh1qE7Q2cEsxVKNfDYPggxRf"
+			]
+		}
+	},
+	"version": 1
+}

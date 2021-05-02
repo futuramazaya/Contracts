@@ -1,0 +1,37 @@
+{
+	"compiler": {
+		"version": "0.5.16+commit.9c3226ce"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"methods": {}
+		},
+		"userdoc": {
+			"methods": {}
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"DragonBall AMM/Factory.sol": "UQ112x112"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"DragonBall AMM/Factory.sol": {
+			"keccak256": "0x1eb9f68568c7cd1af99d91613f1df0a47c479afe270ce8a4bfeb3984a9c29b61",
+			"urls": [
+				"bzz-raw://b321f3ff120b3761aac0c5f8489b873b42b40ac92ab6eeaf9ecee231e7381e29",
+				"dweb:/ipfs/QmWE9cX2Zwe5UTrKviseZ8KGMXUh6eeRGvezLjYerjweqx"
+			]
+		}
+	},
+	"version": 1
+}
