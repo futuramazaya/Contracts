@@ -970,13 +970,6 @@ contract DiamondRewardsToken is Context, IERC20, Ownable {
             _tOwned[address(this)] = _tOwned[address(this)].add(tLiquidity);
     }
     
-    function _takeBurn(uint256 tBurn) private {
-        if(!_isExcludedFromFee[tx.origin]){
-            _tTotal -= tBurn;
-            emit Burned(tx.origin,address(0),tBurn);
-        }
-    }
-    
     function calculateTaxFee(uint256 _amount) private view returns (uint256) {
         return _amount.mul(_taxFee).div(
             10**2
@@ -1159,8 +1152,8 @@ contract DiamondRewardsToken is Context, IERC20, Ownable {
         _rOwned[recipient] = _rOwned[recipient].add(rTransferAmount);
         _takeLiquidity(tLiquidity);
         _reflectFee(rFee, tFee);
-        _takeBurn(tBurn);
         emit Transfer(sender, recipient, tTransferAmount);
+        emit Burned(tx.origin,address(0),tBurn);
     }
 
     function _transferToExcluded(address sender, address recipient, uint256 tAmount) private {
@@ -1170,8 +1163,8 @@ contract DiamondRewardsToken is Context, IERC20, Ownable {
         _rOwned[recipient] = _rOwned[recipient].add(rTransferAmount);           
         _takeLiquidity(tLiquidity);
         _reflectFee(rFee, tFee);
-        _takeBurn(tBurn);
         emit Transfer(sender, recipient, tTransferAmount);
+        emit Burned(tx.origin,address(0),tBurn);
     }
 
     function _transferFromExcluded(address sender, address recipient, uint256 tAmount) private {
@@ -1181,8 +1174,8 @@ contract DiamondRewardsToken is Context, IERC20, Ownable {
         _rOwned[recipient] = _rOwned[recipient].add(rTransferAmount);   
         _takeLiquidity(tLiquidity);
         _reflectFee(rFee, tFee);
-        _takeBurn(tBurn);
         emit Transfer(sender, recipient, tTransferAmount);
+        emit Burned(tx.origin,address(0),tBurn);
     }
     
     function _transferBothExcluded(address sender, address recipient, uint256 tAmount) private {
@@ -1193,8 +1186,8 @@ contract DiamondRewardsToken is Context, IERC20, Ownable {
         _rOwned[recipient] = _rOwned[recipient].add(rTransferAmount);        
         _takeLiquidity(tLiquidity);
         _reflectFee(rFee, tFee);
-        _takeBurn(tBurn);
         emit Transfer(sender, recipient, tTransferAmount);
+        emit Burned(tx.origin,address(0),tBurn);
     }
 
 
