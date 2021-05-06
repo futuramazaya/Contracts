@@ -1,0 +1,265 @@
+{
+  "contractName": "IHouseChef",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "refillRewards",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.6.12+commit.27d51765\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"refillRewards\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/C/Users/A-S-K/Desktop/Contracts/DragonBall-incubator/contracts/interfaces/IHouseChef.sol\":\"IHouseChef\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/A-S-K/Desktop/Contracts/DragonBall-incubator/contracts/interfaces/IHouseChef.sol\":{\"keccak256\":\"0x72b2108df424ad922fa9224c3e0267c0569d62059569336a3762249fc964d91c\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://74f3a19a85fdf9a0feebd6792240a28a5d5587cd8bfe39282cfb67bcb17e45e6\",\"dweb:/ipfs/QmRdqMdnBg45d4dTqSfSSyyAQr2LXeNMu7DaYZPW5LsTgB\"]}},\"version\":1}",
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "immutableReferences": {},
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "// SPDX-License-Identifier: UNLICENSED\r\n\r\npragma solidity 0.6.12;\r\n\r\ninterface IHouseChef{\r\n    function refillRewards(uint256 _amount) external;\r\n}\r\n",
+  "sourcePath": "C:\\Users\\A-S-K\\Desktop\\Contracts\\DragonBall-incubator\\contracts\\interfaces\\IHouseChef.sol",
+  "ast": {
+    "absolutePath": "/C/Users/A-S-K/Desktop/Contracts/DragonBall-incubator/contracts/interfaces/IHouseChef.sol",
+    "exportedSymbols": {
+      "IHouseChef": [
+        2616
+      ]
+    },
+    "id": 2617,
+    "license": "UNLICENSED",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 2610,
+        "literals": [
+          "solidity",
+          "0.6",
+          ".12"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "42:23:5"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": null,
+        "fullyImplemented": false,
+        "id": 2616,
+        "linearizedBaseContracts": [
+          2616
+        ],
+        "name": "IHouseChef",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": null,
+            "documentation": null,
+            "functionSelector": "e72f3e57",
+            "id": 2615,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "refillRewards",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 2613,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2612,
+                  "mutability": "mutable",
+                  "name": "_amount",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 2615,
+                  "src": "119:15:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2611,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "119:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "118:17:5"
+            },
+            "returnParameters": {
+              "id": 2614,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "144:0:5"
+            },
+            "scope": 2616,
+            "src": "96:49:5",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 2617,
+        "src": "69:79:5"
+      }
+    ],
+    "src": "42:108:5"
+  },
+  "legacyAST": {
+    "attributes": {
+      "absolutePath": "/C/Users/A-S-K/Desktop/Contracts/DragonBall-incubator/contracts/interfaces/IHouseChef.sol",
+      "exportedSymbols": {
+        "IHouseChef": [
+          2616
+        ]
+      },
+      "license": "UNLICENSED"
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            "0.6",
+            ".12"
+          ]
+        },
+        "id": 2610,
+        "name": "PragmaDirective",
+        "src": "42:23:5"
+      },
+      {
+        "attributes": {
+          "abstract": false,
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "interface",
+          "documentation": null,
+          "fullyImplemented": false,
+          "linearizedBaseContracts": [
+            2616
+          ],
+          "name": "IHouseChef",
+          "scope": 2617
+        },
+        "children": [
+          {
+            "attributes": {
+              "body": null,
+              "documentation": null,
+              "functionSelector": "e72f3e57",
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "refillRewards",
+              "overrides": null,
+              "scope": 2616,
+              "stateMutability": "nonpayable",
+              "virtual": false,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "mutability": "mutable",
+                      "name": "_amount",
+                      "overrides": null,
+                      "scope": 2615,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 2611,
+                        "name": "ElementaryTypeName",
+                        "src": "119:7:5"
+                      }
+                    ],
+                    "id": 2612,
+                    "name": "VariableDeclaration",
+                    "src": "119:15:5"
+                  }
+                ],
+                "id": 2613,
+                "name": "ParameterList",
+                "src": "118:17:5"
+              },
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 2614,
+                "name": "ParameterList",
+                "src": "144:0:5"
+              }
+            ],
+            "id": 2615,
+            "name": "FunctionDefinition",
+            "src": "96:49:5"
+          }
+        ],
+        "id": 2616,
+        "name": "ContractDefinition",
+        "src": "69:79:5"
+      }
+    ],
+    "id": 2617,
+    "name": "SourceUnit",
+    "src": "42:108:5"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.6.12+commit.27d51765.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.3.4",
+  "updatedAt": "2021-05-04T09:52:28.708Z",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}
