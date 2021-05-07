@@ -1,0 +1,784 @@
+{
+  "contractName": "IHelium3Referral",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "referrer",
+          "type": "address"
+        }
+      ],
+      "name": "recordReferral",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "referrer",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "commission",
+          "type": "uint256"
+        }
+      ],
+      "name": "recordReferralCommission",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        }
+      ],
+      "name": "getReferrer",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.6.12+commit.27d51765\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"getReferrer\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"referrer\",\"type\":\"address\"}],\"name\":\"recordReferral\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"referrer\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"commission\",\"type\":\"uint256\"}],\"name\":\"recordReferralCommission\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"getReferrer(address)\":{\"details\":\"Get the referrer address that referred the user.\"},\"recordReferral(address,address)\":{\"details\":\"Record referral.\"},\"recordReferralCommission(address,uint256)\":{\"details\":\"Record referral commission.\"}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/C/Users/A-S-K/Desktop/Contracts/Contracts/coal-farm/contracts/libs/IHelium3Referral.sol\":\"IHelium3Referral\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/A-S-K/Desktop/Contracts/Contracts/coal-farm/contracts/libs/IHelium3Referral.sol\":{\"keccak256\":\"0xe51c9ce297d5520104e8bbafebb16b6d9fd666941dcaaf6ca6247aeca7562791\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d8283f122df7a91e0f1cd9262b3da9ef22c7a50e4f888f74f6fc1ecab47c4744\",\"dweb:/ipfs/Qmbj2rEt4NMhK8QUZbDC1r64TP9SAKVkLsME96KwJFRsyC\"]}},\"version\":1}",
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "immutableReferences": {},
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "// SPDX-License-Identifier: MIT\r\n\r\npragma solidity 0.6.12;\r\n\r\ninterface IHelium3Referral {\r\n    /**\r\n     * @dev Record referral.\r\n     */\r\n    function recordReferral(address user, address referrer) external;\r\n\r\n    /**\r\n     * @dev Record referral commission.\r\n     */\r\n    function recordReferralCommission(address referrer, uint256 commission) external;\r\n\r\n    /**\r\n     * @dev Get the referrer address that referred the user.\r\n     */\r\n    function getReferrer(address user) external view returns (address);\r\n}\r\n",
+  "sourcePath": "C:\\Users\\A-S-K\\Desktop\\Contracts\\Contracts\\coal-farm\\contracts\\libs\\IHelium3Referral.sol",
+  "ast": {
+    "absolutePath": "/C/Users/A-S-K/Desktop/Contracts/Contracts/coal-farm/contracts/libs/IHelium3Referral.sol",
+    "exportedSymbols": {
+      "IHelium3Referral": [
+        4227
+      ]
+    },
+    "id": 4228,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 4202,
+        "literals": [
+          "solidity",
+          "0.6",
+          ".12"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "35:23:6"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": null,
+        "fullyImplemented": false,
+        "id": 4227,
+        "linearizedBaseContracts": [
+          4227
+        ],
+        "name": "IHelium3Referral",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": null,
+            "documentation": {
+              "id": 4203,
+              "nodeType": "StructuredDocumentation",
+              "src": "96:42:6",
+              "text": " @dev Record referral."
+            },
+            "functionSelector": "0c7f7b6b",
+            "id": 4210,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "recordReferral",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 4208,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4205,
+                  "mutability": "mutable",
+                  "name": "user",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 4210,
+                  "src": "168:12:6",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4204,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "168:7:6",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4207,
+                  "mutability": "mutable",
+                  "name": "referrer",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 4210,
+                  "src": "182:16:6",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4206,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "182:7:6",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "167:32:6"
+            },
+            "returnParameters": {
+              "id": 4209,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "208:0:6"
+            },
+            "scope": 4227,
+            "src": "144:65:6",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": {
+              "id": 4211,
+              "nodeType": "StructuredDocumentation",
+              "src": "217:53:6",
+              "text": " @dev Record referral commission."
+            },
+            "functionSelector": "dc1694b8",
+            "id": 4218,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "recordReferralCommission",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 4216,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4213,
+                  "mutability": "mutable",
+                  "name": "referrer",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 4218,
+                  "src": "310:16:6",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4212,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "310:7:6",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 4215,
+                  "mutability": "mutable",
+                  "name": "commission",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 4218,
+                  "src": "328:18:6",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 4214,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "328:7:6",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "309:38:6"
+            },
+            "returnParameters": {
+              "id": 4217,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "356:0:6"
+            },
+            "scope": 4227,
+            "src": "276:81:6",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": {
+              "id": 4219,
+              "nodeType": "StructuredDocumentation",
+              "src": "365:74:6",
+              "text": " @dev Get the referrer address that referred the user."
+            },
+            "functionSelector": "4a9fefc7",
+            "id": 4226,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getReferrer",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 4222,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4221,
+                  "mutability": "mutable",
+                  "name": "user",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 4226,
+                  "src": "466:12:6",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4220,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "466:7:6",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "465:14:6"
+            },
+            "returnParameters": {
+              "id": 4225,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4224,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 4226,
+                  "src": "503:7:6",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4223,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "503:7:6",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "502:9:6"
+            },
+            "scope": 4227,
+            "src": "445:67:6",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 4228,
+        "src": "62:453:6"
+      }
+    ],
+    "src": "35:482:6"
+  },
+  "legacyAST": {
+    "attributes": {
+      "absolutePath": "/C/Users/A-S-K/Desktop/Contracts/Contracts/coal-farm/contracts/libs/IHelium3Referral.sol",
+      "exportedSymbols": {
+        "IHelium3Referral": [
+          4227
+        ]
+      },
+      "license": "MIT"
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            "0.6",
+            ".12"
+          ]
+        },
+        "id": 4202,
+        "name": "PragmaDirective",
+        "src": "35:23:6"
+      },
+      {
+        "attributes": {
+          "abstract": false,
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "interface",
+          "documentation": null,
+          "fullyImplemented": false,
+          "linearizedBaseContracts": [
+            4227
+          ],
+          "name": "IHelium3Referral",
+          "scope": 4228
+        },
+        "children": [
+          {
+            "attributes": {
+              "body": null,
+              "functionSelector": "0c7f7b6b",
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "recordReferral",
+              "overrides": null,
+              "scope": 4227,
+              "stateMutability": "nonpayable",
+              "virtual": false,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "text": " @dev Record referral."
+                },
+                "id": 4203,
+                "name": "StructuredDocumentation",
+                "src": "96:42:6"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "mutability": "mutable",
+                      "name": "user",
+                      "overrides": null,
+                      "scope": 4210,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "stateMutability": "nonpayable",
+                          "type": "address"
+                        },
+                        "id": 4204,
+                        "name": "ElementaryTypeName",
+                        "src": "168:7:6"
+                      }
+                    ],
+                    "id": 4205,
+                    "name": "VariableDeclaration",
+                    "src": "168:12:6"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "mutability": "mutable",
+                      "name": "referrer",
+                      "overrides": null,
+                      "scope": 4210,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "stateMutability": "nonpayable",
+                          "type": "address"
+                        },
+                        "id": 4206,
+                        "name": "ElementaryTypeName",
+                        "src": "182:7:6"
+                      }
+                    ],
+                    "id": 4207,
+                    "name": "VariableDeclaration",
+                    "src": "182:16:6"
+                  }
+                ],
+                "id": 4208,
+                "name": "ParameterList",
+                "src": "167:32:6"
+              },
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 4209,
+                "name": "ParameterList",
+                "src": "208:0:6"
+              }
+            ],
+            "id": 4210,
+            "name": "FunctionDefinition",
+            "src": "144:65:6"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "functionSelector": "dc1694b8",
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "recordReferralCommission",
+              "overrides": null,
+              "scope": 4227,
+              "stateMutability": "nonpayable",
+              "virtual": false,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "text": " @dev Record referral commission."
+                },
+                "id": 4211,
+                "name": "StructuredDocumentation",
+                "src": "217:53:6"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "mutability": "mutable",
+                      "name": "referrer",
+                      "overrides": null,
+                      "scope": 4218,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "stateMutability": "nonpayable",
+                          "type": "address"
+                        },
+                        "id": 4212,
+                        "name": "ElementaryTypeName",
+                        "src": "310:7:6"
+                      }
+                    ],
+                    "id": 4213,
+                    "name": "VariableDeclaration",
+                    "src": "310:16:6"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "mutability": "mutable",
+                      "name": "commission",
+                      "overrides": null,
+                      "scope": 4218,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 4214,
+                        "name": "ElementaryTypeName",
+                        "src": "328:7:6"
+                      }
+                    ],
+                    "id": 4215,
+                    "name": "VariableDeclaration",
+                    "src": "328:18:6"
+                  }
+                ],
+                "id": 4216,
+                "name": "ParameterList",
+                "src": "309:38:6"
+              },
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 4217,
+                "name": "ParameterList",
+                "src": "356:0:6"
+              }
+            ],
+            "id": 4218,
+            "name": "FunctionDefinition",
+            "src": "276:81:6"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "functionSelector": "4a9fefc7",
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "getReferrer",
+              "overrides": null,
+              "scope": 4227,
+              "stateMutability": "view",
+              "virtual": false,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "text": " @dev Get the referrer address that referred the user."
+                },
+                "id": 4219,
+                "name": "StructuredDocumentation",
+                "src": "365:74:6"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "mutability": "mutable",
+                      "name": "user",
+                      "overrides": null,
+                      "scope": 4226,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "stateMutability": "nonpayable",
+                          "type": "address"
+                        },
+                        "id": 4220,
+                        "name": "ElementaryTypeName",
+                        "src": "466:7:6"
+                      }
+                    ],
+                    "id": 4221,
+                    "name": "VariableDeclaration",
+                    "src": "466:12:6"
+                  }
+                ],
+                "id": 4222,
+                "name": "ParameterList",
+                "src": "465:14:6"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "mutability": "mutable",
+                      "name": "",
+                      "overrides": null,
+                      "scope": 4226,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "stateMutability": "nonpayable",
+                          "type": "address"
+                        },
+                        "id": 4223,
+                        "name": "ElementaryTypeName",
+                        "src": "503:7:6"
+                      }
+                    ],
+                    "id": 4224,
+                    "name": "VariableDeclaration",
+                    "src": "503:7:6"
+                  }
+                ],
+                "id": 4225,
+                "name": "ParameterList",
+                "src": "502:9:6"
+              }
+            ],
+            "id": 4226,
+            "name": "FunctionDefinition",
+            "src": "445:67:6"
+          }
+        ],
+        "id": 4227,
+        "name": "ContractDefinition",
+        "src": "62:453:6"
+      }
+    ],
+    "id": 4228,
+    "name": "SourceUnit",
+    "src": "35:482:6"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.6.12+commit.27d51765.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.3.4",
+  "updatedAt": "2021-05-07T10:32:10.928Z",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {
+      "getReferrer(address)": {
+        "details": "Get the referrer address that referred the user."
+      },
+      "recordReferral(address,address)": {
+        "details": "Record referral."
+      },
+      "recordReferralCommission(address,uint256)": {
+        "details": "Record referral commission."
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}
