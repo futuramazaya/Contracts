@@ -57,8 +57,12 @@ contract FRS_Staking {
 
     uint8 public investment_days;
     uint256 public investment_perc;
+    uint256 public rate;
+    uint256 public saleBalance;
+    bool public isActive = false;
 
     IBEP20 public token;
+    IBEP20 public BUSD;
 
     uint256 public total_investors;
     uint256 public total_invested;
@@ -69,9 +73,9 @@ contract FRS_Staking {
 
 
 
-    uint8[7] public referral1 = [100,100,50,0,0,0,0];
-    uint8[7] public referral2 = [150,150,100,50,50,0,0];
-    uint8[7] public referral3 = [200,200,150,100,100,50,50];
+    uint8[7] public referral1 = [100,70,30,0,0,0,0];
+    uint8[7] public referral2 = [150,150,70,40,40,0,0];
+    uint8[7] public referral3 = [200,200,100,70,70,50,50];
 
     mapping(address => Player) public players;
 
@@ -79,10 +83,17 @@ contract FRS_Staking {
     event Withdraw(address indexed addr, uint256 amount);
     event Reinvest(address indexed addr, uint256 amount);
     event ReferralPayout(address indexed addr, uint256 amount, uint8 level);
+    
+    modifier onlyOwner() {
+        require(owner == msg.sender, "Ownable: caller is not the owner");
+        _;
+    }
 
-    constructor(address _token) public {
+    constructor(address _token, uint256 _rate) public {
         owner = msg.sender;
         token = IBEP20(_token);
+        rate = _rate;
+        BUSD = IBEP20(0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee); //busd contract
         investment_days = 90; //Total 90 days
         investment_perc = 1315; //Total 131.5 %
 
@@ -92,17 +103,44 @@ contract FRS_Staking {
     receive() external payable{
         revert("BNB deposit not supported");
     }
-
-    function deposit(address _referral, uint256 _amount) external payable {
-        require(token.allowance(msg.sender,address(this)) >= _amount,"Set allowance first!");
-        require(uint256(block.timestamp) > full_release, "Not launched");
-        require(_amount >= (200 ether) && _amount <= (100000 ether), "Amount between 200 and 100k only!!");
-        Player storage player = players[msg.sender];
+    function updateSaleBalance() external onlyOwner{
+        require(!isActive,"Contract already active!!");
+        saleBalance = token.balanceOf(address(this));
+        isActive = true;
+    }
+    
+    function setContractState(bool value) external onlyOwner {
+        isActive = value;
+    }
+    
+    function setRate(uint256 value) external onlyOwner {
+        rate = value;
+    }
+    
+    function buyTokens(address _referral, uint256 _buyAmount) external {
+        require(BUSD.allowance(msg.sender,address(this)) >= _buyAmount,"BUSD : Set allowance first!");
+        bool success = BUSD.transferFrom(msg.sender,address(this),_buyAmount);
+        require(success,"BUSD : Transfer failed");
+        uint256 tokenAmount = _buyAmount.mul(rate);
+        saleBalance = saleBalance.sub(tokenAmount);
+        BUSD.transfer(owner,_buyAmount);
+        _deposit(msg.sender,_referral,tokenAmount);
+    }
+    
+    function deposit(address _referral, uint256 _amount) external {
+        require(isActive,"Contract paused from manual deposit!!");
+        require(token.allowance(msg.sender,address(this)) >= _amount,"FRS : Set allowance first!");
         bool success = token.transferFrom(msg.sender,address(this),_amount);
-        require(success,"Transfer failed");
-        require(player.deposits.length < 150, "Max 150 deposits per address");
+        require(success,"FRS : Transfer failed");
+        _deposit(msg.sender,_referral,_amount);
+    }
 
-        _setReferral(msg.sender, _referral);
+    function _deposit(address sender, address _referral, uint256 _amount) internal {
+        Player storage player = players[sender];
+        require(_amount >= (200 ether) && _amount <= (100000 ether), "Amount between 200 and 100k only!!");
+        require(player.deposits.length < 150, "Max 150 deposits per address");
+        require(uint256(block.timestamp) > full_release, "Not launched");
+        _setReferral(sender, _referral);
 
         player.deposits.push(PlayerDeposit({
             amount: _amount,
@@ -128,12 +166,12 @@ contract FRS_Staking {
         }
         total_invested += _amount;
         
-        updateTop10(msg.sender);
+        updateTop10(sender);
         updateTop10(_referral);
 
-        _referralPayout(msg.sender, _amount);
+        _referralPayout(sender, _amount);
 
-        emit Deposit(msg.sender, _amount);
+        emit Deposit(sender, _amount);
     }
 
     function _setReferral(address _addr, address _referral) private {
@@ -191,7 +229,7 @@ contract FRS_Staking {
         }
     }
 
-    function withdraw() payable external {
+    function withdraw() external {
         require(uint256(block.timestamp) > full_release, "Not launched");
         Player storage player = players[msg.sender];
 
@@ -319,22 +357,22 @@ library SafeMath {
     function mul(uint256 a, uint256 b) internal pure returns (uint256) {
         if (a == 0) { return 0; }
         uint256 c = a * b;
-        require(c / a == b);
+        require(c / a == b,"Multiplication overflow");
         return c;
     }
     function div(uint256 a, uint256 b) internal pure returns (uint256) {
-        require(b > 0);
+        require(b > 0,"Division by zero");
         uint256 c = a / b;
         return c;
     }
     function sub(uint256 a, uint256 b) internal pure returns (uint256) {
-        require(b <= a);
+        require(b <= a,"Substraction overflow");
         uint256 c = a - b;
         return c;
     }
     function add(uint256 a, uint256 b) internal pure returns (uint256) {
         uint256 c = a + b;
-        require(c >= a);
+        require(c >= a,"Addition overflow");
         return c;
     }
 }
