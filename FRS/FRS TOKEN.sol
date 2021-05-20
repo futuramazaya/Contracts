@@ -109,6 +109,7 @@ contract FRS is Context, IBEP20 {
         _name = "FRS TOKEN";
         _symbol = "FRS";
         _decimals = 18;
+        _mint(msg.sender, 33000000 ether);
     }
 
     function name() public view returns (string memory) {
