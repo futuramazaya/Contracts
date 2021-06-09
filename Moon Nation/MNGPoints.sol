@@ -10,13 +10,15 @@ contract PointSystem is Ownable{
     
     uint8 private immutable decimals; // Decimals of the token
     
-    mapping(address => mapping(uint8 => uint256)) public userPoints; //Mapping to store points
+    mapping(address => mapping(uint8 => uint256)) private userPoints; //Mapping to store points
     
     uint256[50] public ratio = [10,15,20,25,30,35,40,45,50]; //Ratio store
 
     event PointsBought(uint256 token, uint8 ratio, uint256 points);
     event RatioChanged(uint8 ratioSelector,uint256 ratioValue);
     event PointsSold(uint256 token, uint8 ratio, uint256 points);
+    event PointsDeducted(uint8 ratioSelector,uint256 points);
+    event PointsAdded(address user,uint8 ratioSelector,uint256 points);
 
     constructor(IERC20 _MNG, uint8 _decimals){
         MNG = _MNG;
@@ -25,6 +27,7 @@ contract PointSystem is Ownable{
 
 /*
     Function to buy points using token
+    
     tokenAmount = Amount of token you want to spend
     ratioSelector = On which ratio you want to receive points
 
@@ -32,7 +35,7 @@ contract PointSystem is Ownable{
     Approve this contract to spend MNG tokens on your behalf
 
 */
-    function buy(uint256 tokenAmount, uint8 ratioSelector) external {
+    function buyPoints(uint256 tokenAmount, uint8 ratioSelector) external {
         require(MNG.allowance(msg.sender,address(this)) >= tokenAmount,"Set allowance first!");
         MNG.transferFrom(msg.sender,address(this),tokenAmount);
 
@@ -44,13 +47,14 @@ contract PointSystem is Ownable{
 
 /*
     Function to sell points and receive token
+    
     points = How much points you want to sell
     ratioSelector = On which ratio you want to receive tokens
     
     **You can only sell points in the same ratio you bought
 
 */     
-    function sell(uint256 points, uint8 ratioSelector) external {
+    function sellPoints(uint256 points, uint8 ratioSelector) external {
         require(userPoints[msg.sender][ratioSelector] >= points,"You don't have enough points");
         uint256 tokenAmount = (points * 10 ** decimals) / ratio[ratioSelector];
         userPoints[msg.sender][ratioSelector] -= points;
@@ -59,6 +63,39 @@ contract PointSystem is Ownable{
         MNG.transfer(msg.sender, tokenAmount);
         
         emit PointsSold(tokenAmount,ratioSelector,points);
+    }
+    
+/*
+    Function to reduce point from contract and update on external database
+    
+    points = How much points you want to sell
+    ratioSelector = On which ratio you want to receive tokens
+    
+    **Should listen on PointsDeducted event to know how much points is deducted 
+    
+*/
+    function deductPoints(uint256 points, uint8 ratioSelector) external {
+        require(userPoints[msg.sender][ratioSelector] >= points,"You don't have enough points");
+        userPoints[msg.sender][ratioSelector] -= points;
+        
+        emit PointsDeducted(ratioSelector,points);
+    }
+    
+/*
+    Function to add points back from db to contract
+    Can only be called by owner to prevent misuse
+    
+    user = Address of user to whom the points are being added
+    points = How much points you want to sell
+    ratioSelector = On which ratio you want to receive tokens
+    
+    **Should keep enough BNB to cover fee in owner wallet
+    
+*/
+    function addPoints(address user, uint256 points, uint8 ratioSelector) external onlyOwner {
+        userPoints[user][ratioSelector] += points;
+        
+        emit PointsAdded(user,ratioSelector,points);
     }
 
 //View function to see your own point balance in each ratio
