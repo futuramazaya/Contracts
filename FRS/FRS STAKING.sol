@@ -1,6 +1,10 @@
+/**
+ *Submitted for verification at BscScan.com on 2021-06-03
+*/
+
 //SPDX-License-Identifier: UNLICENSED
 
-pragma solidity 0.6.12;
+pragma solidity 0.8.4;
 
 interface IBEP20 {
 
@@ -44,6 +48,7 @@ contract FRS_Staking {
         uint8 reflevel;
         PlayerDeposit[] deposits;
         mapping(uint8 => uint256) referrals_per_level;
+        mapping(uint8 => uint256) deposit_per_level;
     }
 
     address payable public  owner;
@@ -73,9 +78,9 @@ contract FRS_Staking {
 
 
 
-    uint8[7] public referral1 = [100,70,30,0,0,0,0];
-    uint8[7] public referral2 = [150,150,70,40,40,0,0];
-    uint8[7] public referral3 = [200,200,100,70,70,50,50];
+    uint8[7] private referral1 = [100,70,30,0,0,0,0];
+    uint8[7] private referral2 = [150,150,70,40,40,0,0];
+    uint8[7] private referral3 = [200,200,100,70,70,50,50];
 
     mapping(address => Player) public players;
 
@@ -89,11 +94,11 @@ contract FRS_Staking {
         _;
     }
 
-    constructor(address _token, uint256 _rate) public {
-        owner = msg.sender;
+    constructor(address _token, uint256 _rate) {
+        owner = payable(msg.sender);
         token = IBEP20(_token);
         rate = _rate;
-        BUSD = IBEP20(0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee); //busd contract
+        BUSD = IBEP20(0x3F84C856Ce163aC63362c217FC90e648709ED3aa); //busd contract
         investment_days = 90; //Total 90 days
         investment_perc = 1315; //Total 131.5 %
 
@@ -137,10 +142,10 @@ contract FRS_Staking {
 
     function _deposit(address sender, address _referral, uint256 _amount) internal {
         Player storage player = players[sender];
-        require(_amount >= (200 ether) && _amount <= (100000 ether), "Amount between 200 and 100k only!!");
+        require(_amount >= (1 ether) && _amount <= (100000 ether), "Amount between 1 and 100k only!!");
         require(player.deposits.length < 150, "Max 150 deposits per address");
         require(uint256(block.timestamp) > full_release, "Not launched");
-        _setReferral(sender, _referral);
+        _setReferral(sender, _referral, _amount);
 
         player.deposits.push(PlayerDeposit({
             amount: _amount,
@@ -174,7 +179,7 @@ contract FRS_Staking {
         emit Deposit(sender, _amount);
     }
 
-    function _setReferral(address _addr, address _referral) private {
+    function _setReferral(address _addr, address _referral, uint256 _amount) private {
         if(players[_addr].referral == address(0)) {
             require((_referral != _addr && players[_referral].total_invested != 0) || _referral == owner,"Self referral prohibited/Only existing user as referral!!");
             players[_addr].referral = _referral;
@@ -182,6 +187,7 @@ contract FRS_Staking {
 
             for(uint8 i = 0; i < 7; i++) {
                 players[_referral].referrals_per_level[i]++;
+                players[_referral].deposit_per_level[i] += _amount;
                 _referral = players[_referral].referral;
                 if(_referral == address(0)) break;
             }
@@ -204,6 +210,7 @@ contract FRS_Staking {
                 break;
             }
         }
+        return true;
     }
 
     function _referralPayout(address _addr, uint256 _amount) private {
@@ -301,8 +308,8 @@ contract FRS_Staking {
     function referralInfo(address _addr) view external returns(address[] memory referral){
         Player storage player = players[_addr];
         address[] memory _referral = new address[](player.referrers.length);
-        for(uint256 i = 0; i < players[_addr].referrers.length; i++){
-            _referral[i] = players[_addr].referrers[i];
+        for(uint256 i = 0; i < player.referrers.length; i++){
+            _referral[i] = player.referrers[i];
         }
         return _referral;
     }
@@ -315,6 +322,16 @@ contract FRS_Staking {
         
         return(addr,amount);
     }
+    
+    function displayLines(address addr) view external returns(uint256[7] memory _addr, uint256[7] memory amount){
+        for(uint8 i = 0; i < 7; i++){
+            _addr[i] = players[addr].referrals_per_level[i];
+            amount[i] = players[addr].deposit_per_level[i];
+        }
+        
+        return(_addr,amount);
+    }
+    
     function userInfo(address _addr) view external returns(uint256 for_withdraw, uint256 withdrawable_referral_bonus, uint256 invested, uint256 withdrawn, uint256 referral_bonus, uint256[8] memory referrals) {
         Player storage player = players[_addr];
         uint256 payout = this.payoutOf(_addr);
