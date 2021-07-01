@@ -1,10 +1,14 @@
 /**
+ *Submitted for verification at BscScan.com on 2021-06-25
+*/
+
+/**
  *Submitted for verification at BscScan.com on 2021-06-03
 */
 
 //SPDX-License-Identifier: UNLICENSED
 
-pragma solidity 0.8.4;
+pragma solidity 0.8.6;
 
 interface IBEP20 {
 
@@ -94,11 +98,11 @@ contract FRS_Staking {
         _;
     }
 
-    constructor(address _token, uint256 _rate) {
+    constructor(address _token, uint256 _rate, address _busd) {
         owner = payable(msg.sender);
         token = IBEP20(_token);
         rate = _rate;
-        BUSD = IBEP20(0x3F84C856Ce163aC63362c217FC90e648709ED3aa); //busd contract
+        BUSD = BUSD = IBEP20(_busd); //busd contract
         investment_days = 90; //Total 90 days
         investment_perc = 1315; //Total 131.5 %
 
@@ -108,6 +112,7 @@ contract FRS_Staking {
     receive() external payable{
         revert("BNB deposit not supported");
     }
+    
     function updateSaleBalance() external onlyOwner{
         require(!isActive,"Contract already active!!");
         saleBalance = token.balanceOf(address(this));
@@ -174,7 +179,6 @@ contract FRS_Staking {
         updateTop10(sender);
         updateTop10(_referral);
 
-        _referralPayout(sender, _amount);
 
         emit Deposit(sender, _amount);
     }
@@ -189,7 +193,7 @@ contract FRS_Staking {
                 players[_referral].referrals_per_level[i]++;
                 players[_referral].deposit_per_level[i] += _amount;
                 _referral = players[_referral].referral;
-                if(_referral == address(0)) break;
+                if(_referral == address(0) || _referral == owner) break;
             }
         }
     }
@@ -250,7 +254,9 @@ contract FRS_Staking {
         player.referral_bonus = 0;
         player.total_withdrawn += amount;
         total_withdrawn += amount;
-
+        
+        _referralPayout(msg.sender, amount);
+        
         token.transfer(msg.sender,amount);
 
         emit Withdraw(msg.sender, amount);
