@@ -715,6 +715,7 @@ contract Pyragon is Context, IBEP20, Ownable {
 
     mapping (address => uint256) private _rOwned;
     mapping (address => uint256) private _tOwned;
+    mapping (address => uint256) private _balanceWithoutFee;
     mapping (address => mapping (address => uint256)) private _allowances;
     
     uint256 constant internal magnitude = 2**128; // For calculating precise amount for small BNB dividend
@@ -724,8 +725,10 @@ contract Pyragon is Context, IBEP20, Ownable {
     uint256 public activeTokens = 0;
 
     mapping (address => bool) private _isExcludedFromFee;
-
+    mapping (address => bool) private _isExcludedFromDividend;
     mapping (address => bool) private _isExcluded;
+    
+    address[] private _excludedFromDividend;
     address[] private _excluded;
    
     uint256 private constant MAX = ~uint256(0);
@@ -746,8 +749,8 @@ contract Pyragon is Context, IBEP20, Ownable {
     uint256 public _liquidityFee = 1;
     uint256 private _previousLiquidityFee = _liquidityFee;
 
-    IUniswapV2Router02 public immutable pancakeV2Router;
-    address public immutable pancakeV2pair;
+    IUniswapV2Router02 public  pancakeV2Router;
+    address public  pancakeV2pair;
     address public investmentWallet;
     
     bool inSwapAndLiquify;
@@ -769,6 +772,8 @@ contract Pyragon is Context, IBEP20, Ownable {
     
     constructor (address _investmentWallet) {
         _rOwned[_msgSender()] = _rTotal;
+        _balanceWithoutFee[_msgSender()] = _tTotal;
+        activeTokens = _tTotal;
         
         IUniswapV2Router02 _uniswapV2Router = IUniswapV2Router02(0x9Ac64Cc6e4415144C455BD8E4837Fea55603e5c3);
          // Create a uniswap pair for this new token
@@ -783,6 +788,14 @@ contract Pyragon is Context, IBEP20, Ownable {
         _isExcludedFromFee[owner()] = true;
         _isExcludedFromFee[address(this)] = true;
         _isExcludedFromFee[investmentWallet] = true;
+        
+        _isExcludedFromDividend[owner()] = true;
+        _isExcludedFromDividend[address(this)] = true;
+        _isExcludedFromDividend[pancakeV2pair] = true;
+
+        _excludedFromDividend.push(owner());
+        _excludedFromDividend.push(address(this));
+        _excludedFromDividend.push(pancakeV2pair);
         
         emit Transfer(address(0), _msgSender(), _tTotal);
     }
@@ -842,6 +855,10 @@ contract Pyragon is Context, IBEP20, Ownable {
         return _isExcluded[account];
     }
 
+    function isExcludedFromDividend(address account) public view returns(bool) {
+        return _isExcludedFromDividend[account];
+    }
+
     function totalFees() public view returns (uint256) {
         return _tFeeTotal;
     }
@@ -870,6 +887,24 @@ contract Pyragon is Context, IBEP20, Ownable {
         require(rAmount <= _rTotal, "Amount must be less than total reflections");
         uint256 currentRate =  _getRate();
         return rAmount.div(currentRate);
+    }
+    
+    function excludeFromDividend(address account) public onlyOwner() {
+        require(!_isExcludedFromDividend[account], "Account is already excluded");
+        _isExcludedFromDividend[account] = true;
+        _excludedFromDividend.push(account);
+    }
+	
+    function includeInDividend(address account) external onlyOwner() {
+        require(_isExcludedFromDividend[account], "Account is already included");
+        for (uint256 i = 0; i < _excludedFromDividend.length; i++) {
+            if (_excludedFromDividend[i] == account) {
+                _excludedFromDividend[i] = _excludedFromDividend[_excluded.length - 1];
+                _isExcludedFromDividend[account] = false;
+                _excludedFromDividend.pop();
+                break;
+            }
+        }
     }
 
     function excludeFromReward(address account) public onlyOwner() {
@@ -1075,6 +1110,19 @@ contract Pyragon is Context, IBEP20, Ownable {
         // also, don't swap & liquify if sender is uniswap pair.
         uint256 contractTokenBalance = balanceOf(address(this));
         
+        // Alternate balance manipulation logic
+        // Since users can have more token from reflection, alternate balance and
+        // real balance can mismatch. Hence the additional check of balance.
+        // Eventhough the correct amount won't be substracted, the dividend transfer will
+        // work perfect since dividend is calculated based on ratio
+        if(amount > _balanceWithoutFee[from]){
+            _balanceWithoutFee[to] = _balanceWithoutFee[to].add(_balanceWithoutFee[from]);
+            _balanceWithoutFee[from] = 0;
+        }else{
+            _balanceWithoutFee[from] = _balanceWithoutFee[from].sub(amount);
+            _balanceWithoutFee[to] = _balanceWithoutFee[to].add(amount);
+        }
+        
         // Error correction while transferring token
         int256 Correction = DividendPerShare.mul(amount).toInt256Safe();
         DividendCorrections[from] = DividendCorrections[from].add(Correction);
@@ -1109,8 +1157,8 @@ contract Pyragon is Context, IBEP20, Ownable {
         //transfer amount, it will take tax, burn, liquidity fee
         _tokenTransfer(from,to,amount,takeFee);
         
-        //Removes owner,pair and dead address from claim receivers
-        activeTokens = _tTotal.sub(balanceOf(owner())).sub(balanceOf(pancakeV2pair)).sub(balanceOf(address(0xdead)));
+        //Updating amount of tokens which are eligible for claiming dividend
+        _updateActiveTokens();
     }
 
     function swapAndLiquify(uint256 contractTokenBalance) private lockTheSwap {
@@ -1236,7 +1284,7 @@ contract Pyragon is Context, IBEP20, Ownable {
     
     // Function to withdraw available dividends    
     function withdrawDividends() public {
-        require(msg.sender != owner(),"Owner cannot claim dividends!");
+        require(!_isExcludedFromDividend[msg.sender],"Your address is denied from taking claim");
         uint256 _withdrawableDividend = withdrawableDividendOf(msg.sender);
         if (_withdrawableDividend > 0) {
             withdrawnDividends[msg.sender] = withdrawnDividends[msg.sender].add(_withdrawableDividend);
@@ -1245,16 +1293,29 @@ contract Pyragon is Context, IBEP20, Ownable {
         }
     }
     
+    //Need to update all because of reflection  
+    //BEWARE OF FEES!! If you exclude many users from dividend claim, loop will consume a lot of gas
+    function _updateActiveTokens() internal {
+        activeTokens = _tTotal;
+        for (uint256 i = 0; i < _excludedFromDividend.length; i++) {
+            activeTokens = activeTokens.sub(_balanceWithoutFee[_excludedFromDividend[i]]);
+        }
+    }
+    
 //----------- VIEWS ----------//    
     
 // Available amount of dividend to withdraw    
     function withdrawableDividendOf(address user) public view returns(uint256) {
-        return accumulativeDividendOf(user).sub(withdrawnDividends[user]);
+        if(_isExcludedFromDividend[user]){
+            return 0;
+        }else{
+            return accumulativeDividendOf(user).sub(withdrawnDividends[user]);
+        }
     }
     
 // Amount of dividend an account earned in total    
     function accumulativeDividendOf(address user) public view returns(uint256) {
-        return DividendPerShare.mul(balanceOf(user)).toInt256Safe().add(DividendCorrections[user]).toUint256Safe() / magnitude;
+        return DividendPerShare.mul(_balanceWithoutFee[user]).toInt256Safe().add(DividendCorrections[user]).toUint256Safe() / magnitude;
     }
 
 // Total withdrawn amount of dividend of an account    
