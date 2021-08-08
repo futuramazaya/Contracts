@@ -431,12 +431,7 @@ contract Ownable is Context {
 }
 
 
-
-
-
-
-
-contract GreenLend is Context, IERC20, Ownable {
+contract AbleFinance is Context, IERC20, Ownable {
     using SafeMath for uint256;
     using Address for address;
 
@@ -449,15 +444,15 @@ contract GreenLend is Context, IERC20, Ownable {
     uint256 private constant _max_excluded = 10;
    
     uint256 private constant MAX = ~uint256(0);
-    uint256 private constant _tInitial = 100 * 10**6 * 10**9;
+    uint256 private constant _tInitial = 200 * 10**6 * 10**8;
     uint256 private _rTotal = (MAX - (MAX % _tInitial));
     uint256 private _tFeeTotal;
     uint256 private _tBurned;
     uint256 private _startTime;
 
-    string private _name = 'Green Lend';
-    string private _symbol = 'GLEND';
-    uint8 private _decimals = 9;
+    string private _name = 'Able Finance';
+    string private _symbol = 'ABLE';
+    uint8 private _decimals = 8;
 
     constructor () {
         _startTime = block.timestamp;
@@ -681,7 +676,7 @@ contract GreenLend is Context, IERC20, Ownable {
     }
 
     function _getTValues(uint256 tAmount) private pure returns (uint256, uint256, uint256) {
-        uint256 tFeeHalf = tAmount.mul(10).div(1000);
+        uint256 tFeeHalf = tAmount.mul(15).div(1000);
         uint256 tFee = tFeeHalf.mul(2);
         uint256 tTransferAmount = tAmount.sub(tFee);       
         return (tTransferAmount, tFee, tFeeHalf);
