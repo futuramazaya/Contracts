@@ -1,0 +1,768 @@
+{
+  "contractName": "DividendPayingTokenOptionalInterface",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_owner",
+          "type": "address"
+        }
+      ],
+      "name": "withdrawableDividendOf",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_owner",
+          "type": "address"
+        }
+      ],
+      "name": "withdrawnDividendOf",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_owner",
+          "type": "address"
+        }
+      ],
+      "name": "accumulativeDividendOf",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.4+commit.c7e474f2\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"accumulativeDividendOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"withdrawableDividendOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"withdrawnDividendOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"Roger Wu (https://github.com/roger-wu)\",\"details\":\"OPTIONAL functions for a dividend-paying token contract.\",\"kind\":\"dev\",\"methods\":{\"accumulativeDividendOf(address)\":{\"details\":\"accumulativeDividendOf(_owner) = withdrawableDividendOf(_owner) + withdrawnDividendOf(_owner)\",\"params\":{\"_owner\":\"The address of a token holder.\"},\"returns\":{\"_0\":\"The amount of dividend in wei that `_owner` has earned in total.\"}},\"withdrawableDividendOf(address)\":{\"params\":{\"_owner\":\"The address of a token holder.\"},\"returns\":{\"_0\":\"The amount of dividend in wei that `_owner` can withdraw.\"}},\"withdrawnDividendOf(address)\":{\"params\":{\"_owner\":\"The address of a token holder.\"},\"returns\":{\"_0\":\"The amount of dividend in wei that `_owner` has withdrawn.\"}}},\"title\":\"Dividend-Paying Token Optional Interface\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"accumulativeDividendOf(address)\":{\"notice\":\"View the amount of dividend in wei that an address has earned in total.\"},\"withdrawableDividendOf(address)\":{\"notice\":\"View the amount of dividend in wei that an address can withdraw.\"},\"withdrawnDividendOf(address)\":{\"notice\":\"View the amount of dividend in wei that an address has withdrawn.\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/interface/DividendPayingTokenOptionalInterface.sol\":\"DividendPayingTokenOptionalInterface\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":9999},\"remappings\":[]},\"sources\":{\"project:/contracts/interface/DividendPayingTokenOptionalInterface.sol\":{\"keccak256\":\"0xeb0a4f07fc3d02b3095db34a5477738f187d2ac5d2c5d8236ea34076aee7eb1e\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://04850326a3e786d4642730391ac29db0746fa7f97e17c3aa0f5d657b969c1540\",\"dweb:/ipfs/QmTjLqN6iGVE8xsWSFp9cuwJybKSKhsWgczGKmJbuYP7yb\"]}},\"version\":1}",
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "// SPDX-License-Identifier: MIT\r\n\r\npragma solidity ^0.8.4;\r\n\r\n\r\n/// @title Dividend-Paying Token Optional Interface\r\n/// @author Roger Wu (https://github.com/roger-wu)\r\n/// @dev OPTIONAL functions for a dividend-paying token contract.\r\ninterface DividendPayingTokenOptionalInterface {\r\n  /// @notice View the amount of dividend in wei that an address can withdraw.\r\n  /// @param _owner The address of a token holder.\r\n  /// @return The amount of dividend in wei that `_owner` can withdraw.\r\n  function withdrawableDividendOf(address _owner) external view returns(uint256);\r\n\r\n  /// @notice View the amount of dividend in wei that an address has withdrawn.\r\n  /// @param _owner The address of a token holder.\r\n  /// @return The amount of dividend in wei that `_owner` has withdrawn.\r\n  function withdrawnDividendOf(address _owner) external view returns(uint256);\r\n\r\n  /// @notice View the amount of dividend in wei that an address has earned in total.\r\n  /// @dev accumulativeDividendOf(_owner) = withdrawableDividendOf(_owner) + withdrawnDividendOf(_owner)\r\n  /// @param _owner The address of a token holder.\r\n  /// @return The amount of dividend in wei that `_owner` has earned in total.\r\n  function accumulativeDividendOf(address _owner) external view returns(uint256);\r\n}\r\n",
+  "sourcePath": "C:\\Users\\aceso\\Desktop\\Contracts\\JEWELS\\contracts\\interface\\DividendPayingTokenOptionalInterface.sol",
+  "ast": {
+    "absolutePath": "project:/contracts/interface/DividendPayingTokenOptionalInterface.sol",
+    "exportedSymbols": {
+      "DividendPayingTokenOptionalInterface": [
+        6652
+      ]
+    },
+    "id": 6653,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 6626,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".4"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "35:23:33"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": {
+          "id": 6627,
+          "nodeType": "StructuredDocumentation",
+          "src": "64:172:33",
+          "text": "@title Dividend-Paying Token Optional Interface\n @author Roger Wu (https://github.com/roger-wu)\n @dev OPTIONAL functions for a dividend-paying token contract."
+        },
+        "fullyImplemented": false,
+        "id": 6652,
+        "linearizedBaseContracts": [
+          6652
+        ],
+        "name": "DividendPayingTokenOptionalInterface",
+        "nameLocation": "246:36:33",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "documentation": {
+              "id": 6628,
+              "nodeType": "StructuredDocumentation",
+              "src": "288:201:33",
+              "text": "@notice View the amount of dividend in wei that an address can withdraw.\n @param _owner The address of a token holder.\n @return The amount of dividend in wei that `_owner` can withdraw."
+            },
+            "functionSelector": "a8b9d240",
+            "id": 6635,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "withdrawableDividendOf",
+            "nameLocation": "502:22:33",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 6631,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 6630,
+                  "mutability": "mutable",
+                  "name": "_owner",
+                  "nameLocation": "533:6:33",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 6635,
+                  "src": "525:14:33",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 6629,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "525:7:33",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "524:16:33"
+            },
+            "returnParameters": {
+              "id": 6634,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 6633,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 6635,
+                  "src": "563:7:33",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 6632,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "563:7:33",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "562:9:33"
+            },
+            "scope": 6652,
+            "src": "493:79:33",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 6636,
+              "nodeType": "StructuredDocumentation",
+              "src": "578:203:33",
+              "text": "@notice View the amount of dividend in wei that an address has withdrawn.\n @param _owner The address of a token holder.\n @return The amount of dividend in wei that `_owner` has withdrawn."
+            },
+            "functionSelector": "aafd847a",
+            "id": 6643,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "withdrawnDividendOf",
+            "nameLocation": "794:19:33",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 6639,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 6638,
+                  "mutability": "mutable",
+                  "name": "_owner",
+                  "nameLocation": "822:6:33",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 6643,
+                  "src": "814:14:33",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 6637,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "814:7:33",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "813:16:33"
+            },
+            "returnParameters": {
+              "id": 6642,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 6641,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 6643,
+                  "src": "852:7:33",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 6640,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "852:7:33",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "851:9:33"
+            },
+            "scope": 6652,
+            "src": "785:76:33",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 6644,
+              "nodeType": "StructuredDocumentation",
+              "src": "867:321:33",
+              "text": "@notice View the amount of dividend in wei that an address has earned in total.\n @dev accumulativeDividendOf(_owner) = withdrawableDividendOf(_owner) + withdrawnDividendOf(_owner)\n @param _owner The address of a token holder.\n @return The amount of dividend in wei that `_owner` has earned in total."
+            },
+            "functionSelector": "27ce0147",
+            "id": 6651,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "accumulativeDividendOf",
+            "nameLocation": "1201:22:33",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 6647,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 6646,
+                  "mutability": "mutable",
+                  "name": "_owner",
+                  "nameLocation": "1232:6:33",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 6651,
+                  "src": "1224:14:33",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 6645,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1224:7:33",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1223:16:33"
+            },
+            "returnParameters": {
+              "id": 6650,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 6649,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 6651,
+                  "src": "1262:7:33",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 6648,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1262:7:33",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1261:9:33"
+            },
+            "scope": 6652,
+            "src": "1192:79:33",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 6653,
+        "src": "236:1038:33",
+        "usedErrors": []
+      }
+    ],
+    "src": "35:1241:33"
+  },
+  "legacyAST": {
+    "absolutePath": "project:/contracts/interface/DividendPayingTokenOptionalInterface.sol",
+    "exportedSymbols": {
+      "DividendPayingTokenOptionalInterface": [
+        6652
+      ]
+    },
+    "id": 6653,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 6626,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".4"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "35:23:33"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": {
+          "id": 6627,
+          "nodeType": "StructuredDocumentation",
+          "src": "64:172:33",
+          "text": "@title Dividend-Paying Token Optional Interface\n @author Roger Wu (https://github.com/roger-wu)\n @dev OPTIONAL functions for a dividend-paying token contract."
+        },
+        "fullyImplemented": false,
+        "id": 6652,
+        "linearizedBaseContracts": [
+          6652
+        ],
+        "name": "DividendPayingTokenOptionalInterface",
+        "nameLocation": "246:36:33",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "documentation": {
+              "id": 6628,
+              "nodeType": "StructuredDocumentation",
+              "src": "288:201:33",
+              "text": "@notice View the amount of dividend in wei that an address can withdraw.\n @param _owner The address of a token holder.\n @return The amount of dividend in wei that `_owner` can withdraw."
+            },
+            "functionSelector": "a8b9d240",
+            "id": 6635,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "withdrawableDividendOf",
+            "nameLocation": "502:22:33",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 6631,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 6630,
+                  "mutability": "mutable",
+                  "name": "_owner",
+                  "nameLocation": "533:6:33",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 6635,
+                  "src": "525:14:33",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 6629,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "525:7:33",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "524:16:33"
+            },
+            "returnParameters": {
+              "id": 6634,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 6633,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 6635,
+                  "src": "563:7:33",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 6632,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "563:7:33",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "562:9:33"
+            },
+            "scope": 6652,
+            "src": "493:79:33",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 6636,
+              "nodeType": "StructuredDocumentation",
+              "src": "578:203:33",
+              "text": "@notice View the amount of dividend in wei that an address has withdrawn.\n @param _owner The address of a token holder.\n @return The amount of dividend in wei that `_owner` has withdrawn."
+            },
+            "functionSelector": "aafd847a",
+            "id": 6643,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "withdrawnDividendOf",
+            "nameLocation": "794:19:33",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 6639,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 6638,
+                  "mutability": "mutable",
+                  "name": "_owner",
+                  "nameLocation": "822:6:33",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 6643,
+                  "src": "814:14:33",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 6637,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "814:7:33",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "813:16:33"
+            },
+            "returnParameters": {
+              "id": 6642,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 6641,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 6643,
+                  "src": "852:7:33",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 6640,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "852:7:33",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "851:9:33"
+            },
+            "scope": 6652,
+            "src": "785:76:33",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 6644,
+              "nodeType": "StructuredDocumentation",
+              "src": "867:321:33",
+              "text": "@notice View the amount of dividend in wei that an address has earned in total.\n @dev accumulativeDividendOf(_owner) = withdrawableDividendOf(_owner) + withdrawnDividendOf(_owner)\n @param _owner The address of a token holder.\n @return The amount of dividend in wei that `_owner` has earned in total."
+            },
+            "functionSelector": "27ce0147",
+            "id": 6651,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "accumulativeDividendOf",
+            "nameLocation": "1201:22:33",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 6647,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 6646,
+                  "mutability": "mutable",
+                  "name": "_owner",
+                  "nameLocation": "1232:6:33",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 6651,
+                  "src": "1224:14:33",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 6645,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1224:7:33",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1223:16:33"
+            },
+            "returnParameters": {
+              "id": 6650,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 6649,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 6651,
+                  "src": "1262:7:33",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 6648,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1262:7:33",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1261:9:33"
+            },
+            "scope": 6652,
+            "src": "1192:79:33",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 6653,
+        "src": "236:1038:33",
+        "usedErrors": []
+      }
+    ],
+    "src": "35:1241:33"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.4+commit.c7e474f2.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.2",
+  "updatedAt": "2021-08-15T10:56:17.096Z",
+  "devdoc": {
+    "author": "Roger Wu (https://github.com/roger-wu)",
+    "details": "OPTIONAL functions for a dividend-paying token contract.",
+    "kind": "dev",
+    "methods": {
+      "accumulativeDividendOf(address)": {
+        "details": "accumulativeDividendOf(_owner) = withdrawableDividendOf(_owner) + withdrawnDividendOf(_owner)",
+        "params": {
+          "_owner": "The address of a token holder."
+        },
+        "returns": {
+          "_0": "The amount of dividend in wei that `_owner` has earned in total."
+        }
+      },
+      "withdrawableDividendOf(address)": {
+        "params": {
+          "_owner": "The address of a token holder."
+        },
+        "returns": {
+          "_0": "The amount of dividend in wei that `_owner` can withdraw."
+        }
+      },
+      "withdrawnDividendOf(address)": {
+        "params": {
+          "_owner": "The address of a token holder."
+        },
+        "returns": {
+          "_0": "The amount of dividend in wei that `_owner` has withdrawn."
+        }
+      }
+    },
+    "title": "Dividend-Paying Token Optional Interface",
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {
+      "accumulativeDividendOf(address)": {
+        "notice": "View the amount of dividend in wei that an address has earned in total."
+      },
+      "withdrawableDividendOf(address)": {
+        "notice": "View the amount of dividend in wei that an address can withdraw."
+      },
+      "withdrawnDividendOf(address)": {
+        "notice": "View the amount of dividend in wei that an address has withdrawn."
+      }
+    },
+    "version": 1
+  }
+}
