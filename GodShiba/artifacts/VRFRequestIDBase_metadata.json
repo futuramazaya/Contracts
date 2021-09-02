@@ -1,0 +1,45 @@
+{
+	"compiler": {
+		"version": "0.8.6+commit.11564f7e"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"GodShiba_flat.sol": "VRFRequestIDBase"
+		},
+		"evmVersion": "berlin",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"GodShiba_flat.sol": {
+			"keccak256": "0xf990e427ac4a1a677145d16b36e6898f475ba4a75367343d350b43ce58fadb96",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://73fd3620e6a6ec56d06238f7e71268982251177792f5d0d6593093c77a69ce01",
+				"dweb:/ipfs/QmY4TfHmCetj4pWBhZjrUrppseEPcYKbRgUNuTjUxphXE8"
+			]
+		}
+	},
+	"version": 1
+}
