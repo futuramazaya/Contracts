@@ -1,51 +1,77 @@
 //SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.9;
 
-interface IBEP20 {
-    function totalSupply() external view returns (uint256);
-    function balanceOf(address account) external view returns (uint256);
-    function transfer(address recipient, uint256 amount) external returns (bool);
-    function allowance(address owner, address spender) external view returns (uint256);
-    function approve(address spender, uint256 amount) external returns (bool);
-    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
-    event Transfer(address indexed from, address indexed to, uint256 value);
-    event Approval(address indexed owner, address indexed spender, uint256 value);
-}
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
+contract TokenLocker is Ownable {
 
-contract TokenLocker {
+    IERC20 public token;
 
-
-    address public _withdrawAddress;
-    uint256 public _timeLimit = 7 days;
-    uint256 public _unlockRate = 10;
-    uint256 public _lastWithdraw = block.timestamp;
-    event Withdraw(uint256 amount, uint256 timestamp);
-
-    modifier onlyWithdrawAddress () {
-        require(msg.sender == _withdrawAddress);
-        _;
+    struct User{
+        bool active;
+        bool isWhitelisted;
+        uint256 depositTime;
+        uint256 depositAmount;
+        uint256 releaseTime;
+        uint256 lockTime;
     }
 
-    constructor (address withdraw) {
-        _withdrawAddress = withdraw;
-    }
-    
-    function setWithdrawAddress(address withdraw) external onlyWithdrawAddress{
-        _withdrawAddress = withdraw;
+    mapping(address => User) public users;
+    mapping(uint256 => uint256) public lockTimeToReward;
+
+    event Deposit(address user, uint256 amount, uint256 lockTime);
+    event Withdraw(address user, uint256 reward, uint256 lockTime);
+
+    constructor (address _token) {
+        token = IERC20(_token);
+        lockTimeToReward[4 weeks] = 50;
+        lockTimeToReward[8 weeks] = 100;
+        lockTimeToReward[16 weeks] = 200;
     }
 
-    function withdrawTokens(IBEP20 token) onlyWithdrawAddress external {
-        uint256 contractBalance = token.balanceOf(address(this));
-        require(block.timestamp - _lastWithdraw >= _timeLimit,"Timelimit not yet reached");
-        require(contractBalance > 0,"Insufficient funds");
-        uint256 multiplier = (block.timestamp - _lastWithdraw) / _timeLimit;
-        uint256 amount = (contractBalance * multiplier * _unlockRate) / 100;
-        uint256 withdrawable = amount > contractBalance ? contractBalance : amount;
-        token.transfer(_withdrawAddress,withdrawable);
-        _lastWithdraw = block.timestamp;
-        emit Withdraw(amount,block.timestamp);
+    function setLockRewards(uint256 lockTime, uint256 reward) external onlyOwner {
+        lockTimeToReward[lockTime] = reward;
+    }
 
+    function setWhitelist(address user, bool value) external onlyOwner {
+        users[user].isWhitelisted = value;
+    }
+
+    function deposit(uint256 lockTime, uint256 amount) external {
+        User storage user = users[msg.sender];
+
+        require(!user.active,"Deposit already exists");
+        require(user.isWhitelisted,"User not whitelisted");
+
+        token.transferFrom(msg.sender, address(this), amount);
+
+        user.active = true;
+        user.depositTime = block.timestamp;
+        user.depositAmount = amount;
+        user.releaseTime = block.timestamp + lockTime;
+        user.lockTime = lockTime;
+
+        emit Deposit(msg.sender,amount,lockTime);
+    }
+
+    function withdraw() external {
+        User storage user = users[msg.sender];
+
+        require(user.active,"User have no deposits");
+        require(block.timestamp >= user.releaseTime ,"Token still in locked state");
+        
+        uint256 reward = user.depositAmount * lockTimeToReward[user.lockTime] / 1000;
+        uint256 withdrawAmount = reward + user.depositAmount;
+
+        require(token.balanceOf(address(this)) >= withdrawAmount,"Not enough balance to pay reward");
+
+        user.depositAmount = 0;
+        user.active = false;
+
+        token.transfer(msg.sender, withdrawAmount);
+
+        emit Withdraw(msg.sender,withdrawAmount, user.lockTime);
     }
 
 }
