@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
+pragma solidity ^0.8.10;
+
 
 import "@openzeppelin/contracts/interfaces/IERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-
-pragma solidity ^0.8.10;
 
 contract NFTMarket is Ownable {
 
