@@ -139,7 +139,7 @@ contract UsefulFunctions is Ownable{
 
             if (!automatedMarketMakerPairs[to]) {
                 require(
-                    true,//balanceOf(to) + amount <= maxWalletAmount,
+                    balanceOf(to) + amount <= maxWalletAmount,
                     "Balance exceeds limit"
                 );
             }
