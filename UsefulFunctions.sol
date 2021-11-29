@@ -39,8 +39,9 @@ contract UsefulFunctions is Ownable{
     IUniswapV2Router02 private router =
         IUniswapV2Router02(0x9Ac64Cc6e4415144C455BD8E4837Fea55603e5c3); 
 
-    uint256 public maxTxAmount = 1 * 10**7 * 10**9;
-    uint256 public maxWalletAmount = 5 * 10**7 * 10**9;
+    uint256 public maxBuyAmount = 1 * 10**7 * 10**18;
+    uint256 public maxSellAmount = 1 * 10**7 * 10**18;
+    uint256 public maxWalletAmount = 1 * 10**8 * 10**18;
 
     constructor() {
         buyFee.liquidityFee = 20;
@@ -135,7 +136,6 @@ contract UsefulFunctions is Ownable{
 
         if (takeFee) {
             require(isTradingEnabled,"Trading not enabled yet");
-            require(amount <= maxTxAmount, "Amount exceeds limit");
 
             if (!automatedMarketMakerPairs[to]) {
                 require(
@@ -147,15 +147,16 @@ contract UsefulFunctions is Ownable{
             uint256 fees;
 
             if (automatedMarketMakerPairs[to]) {
+                require(amount <= maxSellAmount, "Sell exceeds limit");
                 fees = totalSellFee;
             } else if (automatedMarketMakerPairs[from]) {
+                require(amount <= maxBuyAmount, "Buy exceeds limit");
                 fees = totalBuyFee;
             }
+            
             uint256 feeAmount = amount.mul(fees).div(1000);
-
             amount = amount.sub(feeAmount);
-
-            //super._transfer(from, address(this), feeAmount);
+            super._transfer(from, address(this), feeAmount);
         }
 
     }
