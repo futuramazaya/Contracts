@@ -106,9 +106,14 @@ contract UsefulFunctions is Ownable{
         maxWalletAmount = value;
     }
 
-    function setMaxTx(uint256 value) external onlyOwner {
-        maxTxAmount = value;
+    function setMaxBuyAmount(uint256 value) external onlyOwner {
+        maxBuyAmount = value;
     }
+
+    function setMaxSellAmount(uint256 value) external onlyOwner {
+        maxSellAmount = value;
+    }
+ 
 
     function getTokenPrice(address _token, uint256 amount)
         internal
